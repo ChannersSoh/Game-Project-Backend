@@ -157,7 +157,7 @@ function fetchFranchisesBatch(offset, batchSize) {
       });
 }
 
-function fetchAndSaveData(totalGames = 100000) {
+function fetchAndSaveData(totalGames = 75000) {
     const gameBatchSize = 500;
     const keywordBatchSize = 500;
     const artworkBatchSize = 200; 
