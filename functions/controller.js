@@ -1,10 +1,12 @@
-const {retrieveAllGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById} = require ('./model.js');
+const {retrieveAllGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveGames} = require ('./model.js');
 const req = require("express/lib/request");
 
 
 
 exports.getAllGames = (req, res, next) => {
-    retrieveAllGames()
+    const limit = parseInt(req.query.limit) || 20; 
+    const page = parseInt(req.query.page) || 1;
+    retrieveAllGames(page, limit)
         .then((games) => {
             res.status(200).send({games});
         })
@@ -12,7 +14,7 @@ exports.getAllGames = (req, res, next) => {
             console.log(err);
             next(err);
         });
-} /// too large, crashes, needs to be reduced / cached
+} 
 
 exports.getAllGenres = (req, res, next) => {
     retrieveAllGenres()
@@ -70,3 +72,19 @@ exports.getGameById = (req, res, next) => {
             next(err);
         });
 }
+
+exports.getGames = async (req, res, next) => {
+    const searchTerm = req.query.searchTerm || '';
+    const sortField = req.query.sortField || 'name';
+    const sortOrder = req.query.sortOrder || 'asc';
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    try {
+        const games = await retrieveGames(searchTerm, sortField, sortOrder, page, limit);
+        res.status(200).send({ games });
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
