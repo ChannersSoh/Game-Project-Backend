@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const db = require('../firestore');
+const db = require('../functions/firestore');
 
 function uploadToFirestore(collectionName, data) {
     const collectionRef = db.collection(collectionName);
