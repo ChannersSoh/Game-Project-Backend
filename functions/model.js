@@ -4,38 +4,44 @@ const { collection, getDocs } = require('firebase/firestore');
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache();
 
-exports.retrieveAllGames = async (page, limit) => {
-    const cacheKey = `games_all_${page}_${limit}`;
+exports.retrieveAllGames = async (page, limit, sortField = 'name', sortOrder = 'asc') => {
+    const cacheKey = `games_all_${page}_${limit}_${sortField}_${sortOrder}`;
     const cachedData = myCache.get(cacheKey);
-
+    
     if (cachedData) {
         return cachedData;
     }
 
     try {
-        let gamesRef = db.collection('games').orderBy('name').limit(limit);
+        const validSortFields = ['name', 'rating', 'released'];
+        const validSortOrders = ['asc', 'desc'];
 
-        if (page > 1) {
-            const startAfterIndex = (page - 1) * limit;
-        
-            // Query for the first page if startAfterIndex is 0
-            if (startAfterIndex > 0) {
-                const snapshot = await gamesRef.limit(startAfterIndex).get();
-        
-                if (snapshot.docs.length < startAfterIndex) {
-                    console.log(`Not enough documents to start after index ${startAfterIndex}`);
-                    return [];
-                }
-        
-                const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-                gamesRef = gamesRef.startAfter(lastDoc);
-            }
+        if (!validSortFields.includes(sortField)) {
+            console.warn(`Invalid sortField '${sortField}', defaulting to 'name'`);
+            sortField = 'name';
+        }
+        if (!validSortOrders.includes(sortOrder.toLowerCase())) {
+            console.warn(`Invalid sortOrder '${sortOrder}', defaulting to 'asc'`);
+            sortOrder = 'asc';
         }
 
-        const snapshot = await gamesRef.get();
+        let gamesRef = db.collection('games').orderBy(sortField, sortOrder);
+
+        const offset = (page - 1) * limit;
+        if (offset > 0) {
+            const snapshot = await gamesRef.limit(offset).get();
+            if (snapshot.docs.length < offset) {
+                console.log(`Not enough documents to start after index ${offset}`);
+                return [];
+            }
+            const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+            gamesRef = gamesRef.startAfter(lastDoc);
+        }
+
+        const snapshot = await gamesRef.limit(limit).get();
 
         if (snapshot.empty) {
-            return []; 
+            return [];
         }
 
         let games = [];
@@ -46,26 +52,26 @@ exports.retrieveAllGames = async (page, limit) => {
         myCache.set(cacheKey, games, 86400);
         return games;
     } catch (error) {
-        throw error; 
+        console.error('Error retrieving games:', error);
+        throw error;
     }
 };
 
 exports.retrieveGames = async (searchTerm, sortField, sortOrder, page, limit) => {
     const cacheKey = `games_${searchTerm}_${sortField}_${sortOrder}_${page}_${limit}`;
-
     const cachedData = myCache.get(cacheKey);
-
     if (cachedData) {
         return cachedData;
     }
 
     try {
-        const gamesRef = db.collection('games');
+        let query = db.collection('games');
 
-        let query = gamesRef;
         if (searchTerm) {
+            console.log(searchTerm)
             query = query.where('name', '>=', searchTerm).where('name', '<=', searchTerm + '\uf8ff');
         }
+
         if (sortField && sortOrder) {
             query = query.orderBy(sortField, sortOrder);
         }
@@ -86,10 +92,10 @@ exports.retrieveGames = async (searchTerm, sortField, sortOrder, page, limit) =>
         myCache.set(cacheKey, games, 86400);
         return games;
     } catch (error) {
+        console.error('Error retrieving games:', error);
         throw error;
     }
 };
-
 
 
 exports.selectPlatforms = async (req, res, next) => {

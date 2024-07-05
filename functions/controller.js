@@ -6,15 +6,18 @@ const req = require("express/lib/request");
 exports.getAllGames = (req, res, next) => {
     const limit = parseInt(req.query.limit) || 20; 
     const page = parseInt(req.query.page) || 1;
-    retrieveAllGames(page, limit)
+    const sortField = req.query.sortField || 'name';  
+    const sortOrder = req.query.sortOrder || 'asc';  
+
+    retrieveAllGames(page, limit, sortField, sortOrder)
         .then((games) => {
-            res.status(200).send({games});
+            res.status(200).send({ games });
         })
         .catch((err) => {
             console.log(err);
             next(err);
         });
-} 
+};
 
 exports.getAllGenres = (req, res, next) => {
     retrieveAllGenres()
@@ -73,18 +76,20 @@ exports.getGameById = (req, res, next) => {
         });
 }
 
-exports.getGames = async (req, res, next) => {
+exports.getGames = (req, res, next) => {
     const searchTerm = req.query.searchTerm || '';
     const sortField = req.query.sortField || 'name';
     const sortOrder = req.query.sortOrder || 'asc';
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    try {
-        const games = await retrieveGames(searchTerm, sortField, sortOrder, page, limit);
-        res.status(200).send({ games });
-    } catch (err) {
-        console.log(err);
-        next(err);
-    }
+    retrieveGames(searchTerm, sortField, sortOrder, page, limit)
+        .then((games) => {
+            res.status(200).send({games});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+
 };

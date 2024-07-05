@@ -27,7 +27,38 @@ describe('GET /api/genres', () => {
     })
 })
 
-describe.only('GET /api/games', () => {
+    describe.only('GET /api/games/search', () => {
+        test('should return 200 and games with valid searchTerm', async () => {
+            const response = await request(app)
+                .get('/api/games/search')
+                .query({ searchTerm: 'Overwatch' }); // Adjust searchTerm as needed
+    
+            console.log(response.body); // Log response to inspect
+    
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveProperty('games');
+            expect(Array.isArray(response.body.games)).toBe(true);
+            expect(response.body.games.length).toBeGreaterThan(0);
+        });
+
+    test('should return empty array with invalid searchTerm', async () => {
+        const searchTerm = 'InvalidGameName'; // Replace with a non-existent game name
+
+        // Send GET request to /api/games/search with invalid searchTerm
+        const response = await request(app)
+            .get('/api/games/search')
+            .query({ searchTerm });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('games');
+        expect(response.body.games).toBeInstanceOf(Array);
+        expect(response.body.games.length).toBe(0);
+    });
+
+    // Add more test cases as needed to cover different scenarios
+});
+
+describe('GET /api/games', () => {
     test('Responds with a status 200 containing an array of an object of test data', () => {
         return request(app).get('/api/games').expect(200)
             .then(({body}) => {
