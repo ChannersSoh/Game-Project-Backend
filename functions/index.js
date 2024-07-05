@@ -12,6 +12,7 @@ Get top 10/20 most popular games
 Get 10 popular genres (less: educational, family, card & board
 Switch between app & functions.https.onRequest(app); when testing or not
 Link more parts to cache
+Pagenation
 * */
 
 const app = express();
