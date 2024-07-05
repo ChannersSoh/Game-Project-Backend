@@ -6,10 +6,23 @@ const { selectPlatforms } = require('./model.js')
 const {getAllGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById} = require('./controller.js');
 
 /*
-Get games by genre
-Get 10 games by name
+Charnjeet
+
+/api/games/:genre Get games by genre
+/api/Get 10 games by name
 Get top 10/20 most popular games
-Get 10 popular genres (less: educational, family, card & board
+Querying cache for exitising
+
+Jack:
+
+/api - gets all available endpoints
+Get 10 popular genres (less: educational, family, card & board)
+Get all genres
+Games by genre alphabetically
+Endpoints for user
+
+Together / whoever finishes first:
+
 Switch between app & functions.https.onRequest(app); when testing or not
 Link more parts to cache
 Pagenation
