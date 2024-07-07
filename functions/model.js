@@ -28,10 +28,10 @@ exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery) =
         let gamesRef = db.collection('games').orderBy(sortField, sortOrder);
 
         if (searchQuery) {
-                gamesRef = gamesRef.where('name', '>=', searchQuery)
-                                   .where('name', '<=', searchQuery + '\uf8ff');
-                                }
+            const searchQueryLower = searchQuery.toLowerCase(); 
         
+            gamesRef = gamesRef.where('slug', '>=', searchQueryLower).where('slug', '<=', searchQueryLower + '\uf8ff');
+        }
 
         const offset = (page - 1) * limit;
         if (offset > 0) {

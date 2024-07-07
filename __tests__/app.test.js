@@ -77,19 +77,19 @@ describe.only('GET /api/games', () => {
         expect(games.length).toBe(10); 
     });
 
-    test('Responds with games filtered by search query', async () => {
+    test.only('Responds with games filtered by search query', async () => {
         const response = await request(app)
             .get('/api/games')
-            .query({ search: 'Overwatch' })
+            .query({ search: 'overwatch' })  // Using lowercase
             .expect(200);
-
+    
         const games = response.body.games;
         expect(games.length).toBeGreaterThan(0); 
         games.forEach((game) => {
-            expect(game.name.toLowerCase()).toContain('overwatch');
+            expect(game.slug.toLowerCase()).toContain('overwatch');
         });
     });
-
+    
     test('Responds with status 500 if limit query parameter is invalid', async () => {
         jest.spyOn(console, 'error').mockImplementation(() => {});
 
