@@ -4,16 +4,16 @@ const { collection, getDocs } = require('firebase/firestore');
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache();
 
-exports.retrieveAllGames = async (page, limit, sortField = 'name', sortOrder = 'asc') => {
-    const cacheKey = `games_all_${page}_${limit}_${sortField}_${sortOrder}`;
+exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery) => {
+    const cacheKey = `games_all_${page}_${limit}_${sortField}_${sortOrder}_${searchQuery}`;
     const cachedData = myCache.get(cacheKey);
-    
+
     if (cachedData) {
         return cachedData;
     }
 
     try {
-        const validSortFields = ['name', 'rating', 'released'];
+        const validSortFields = ['name', 'rating', 'released', 'metacritic', 'playtime'];
         const validSortOrders = ['asc', 'desc'];
 
         if (!validSortFields.includes(sortField)) {
@@ -26,6 +26,12 @@ exports.retrieveAllGames = async (page, limit, sortField = 'name', sortOrder = '
         }
 
         let gamesRef = db.collection('games').orderBy(sortField, sortOrder);
+
+        if (searchQuery) {
+                gamesRef = gamesRef.where('name', '>=', searchQuery)
+                                   .where('name', '<=', searchQuery + '\uf8ff');
+                                }
+        
 
         const offset = (page - 1) * limit;
         if (offset > 0) {
@@ -41,6 +47,7 @@ exports.retrieveAllGames = async (page, limit, sortField = 'name', sortOrder = '
         const snapshot = await gamesRef.limit(limit).get();
 
         if (snapshot.empty) {
+            console.log('No documents found');
             return [];
         }
 
@@ -53,50 +60,9 @@ exports.retrieveAllGames = async (page, limit, sortField = 'name', sortOrder = '
         return games;
     } catch (error) {
         console.error('Error retrieving games:', error);
-        throw error;
+        throw new Error(`Firestore query failed: ${error.message}`);
     }
 };
-
-exports.retrieveGames = async (searchTerm, sortField, sortOrder, page, limit) => {
-    const cacheKey = `games_${searchTerm}_${sortField}_${sortOrder}_${page}_${limit}`;
-    const cachedData = myCache.get(cacheKey);
-    if (cachedData) {
-        return cachedData;
-    }
-
-    try {
-        let query = db.collection('games');
-
-        if (searchTerm) {
-            console.log(searchTerm)
-            query = query.where('name', '>=', searchTerm).where('name', '<=', searchTerm + '\uf8ff');
-        }
-
-        if (sortField && sortOrder) {
-            query = query.orderBy(sortField, sortOrder);
-        }
-
-        query = query.offset((page - 1) * limit).limit(limit);
-
-        const snapshot = await query.get();
-
-        if (snapshot.empty) {
-            return [];
-        }
-
-        let games = [];
-        snapshot.forEach(doc => {
-            games.push({ id: doc.id, ...doc.data() });
-        });
-
-        myCache.set(cacheKey, games, 86400);
-        return games;
-    } catch (error) {
-        console.error('Error retrieving games:', error);
-        throw error;
-    }
-};
-
 
 exports.selectPlatforms = async (req, res, next) => {
     try {

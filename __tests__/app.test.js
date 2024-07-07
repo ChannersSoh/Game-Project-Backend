@@ -1,12 +1,12 @@
 const {app} = require('../functions/index.js');
 const request = require('supertest');
 const db = require('../functions/admin.js');
+const { toBeSortedBy } = require('jest-sorted');
 
 const developersData = require('../api-data/data/developers.json');
 const gamesWithDescriptionsData = require('../api-data/data/games_with_descriptions.json');
 const genresData = require('../api-data/data/genres.json');
 const publishersData = require('../api-data/data/publishers.json');
-
 
 
 describe('GET /api/genres', () => {
@@ -27,41 +27,12 @@ describe('GET /api/genres', () => {
     })
 })
 
-    describe.only('GET /api/games/search', () => {
-        test('should return 200 and games with valid searchTerm', async () => {
-            const response = await request(app)
-                .get('/api/games/search')
-                .query({ searchTerm: 'Overwatch' }); // Adjust searchTerm as needed
-    
-            console.log(response.body); // Log response to inspect
-    
-            expect(response.status).toBe(200);
-            expect(response.body).toHaveProperty('games');
-            expect(Array.isArray(response.body.games)).toBe(true);
-            expect(response.body.games.length).toBeGreaterThan(0);
-        });
-
-    test('should return empty array with invalid searchTerm', async () => {
-        const searchTerm = 'InvalidGameName'; // Replace with a non-existent game name
-
-        // Send GET request to /api/games/search with invalid searchTerm
-        const response = await request(app)
-            .get('/api/games/search')
-            .query({ searchTerm });
-
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('games');
-        expect(response.body.games).toBeInstanceOf(Array);
-        expect(response.body.games.length).toBe(0);
-    });
-
-    // Add more test cases as needed to cover different scenarios
-});
-
-describe('GET /api/games', () => {
-    test('Responds with a status 200 containing an array of an object of test data', () => {
-        return request(app).get('/api/games').expect(200)
-            .then(({body}) => {
+describe.only('GET /api/games', () => {
+    test('Responds with a status 200 containing an array of game objects', () => {
+        return request(app)
+            .get('/api/games')
+            .expect(200)
+            .then(({ body }) => {
                 expect(body.games.length).toBe(20);
                 body.games.forEach((game) => {
                     expect(game).toMatchObject({
@@ -70,22 +41,67 @@ describe('GET /api/games', () => {
                         slug: expect.any(String),
                         background_image: expect.any(String),
                     });
-                })
+                });
+            });
+    });
 
-            })
-    })
-    test('should return status 500 if something goes wrong', async () => {
-        jest.spyOn(console, 'error').mockImplementation(() => {});
-        
+    test('Responds with games sorted by rating in descending order', async () => {
         const response = await request(app)
-            .get('/games')
-            .query({ limit: 'invalid' }) 
-console.log(response)
-        expect(response.status).toBe(500);
+            .get('/api/games')
+            .query({ sortField: 'rating', sortOrder: 'desc' })
+            .expect(200);
 
+        const games = response.body.games;
+        expect(games.length).toBe(20); 
+        expect(games).toBeSortedBy('rating', { descending: true });
+    });
+
+    test('Responds with games sorted by released date in ascending order', async () => {
+        const response = await request(app)
+            .get('/api/games')
+            .query({ sortField: 'released', sortOrder: 'asc' })
+            .expect(200);
+
+        const games = response.body.games;
+        expect(games.length).toBe(20); 
+        expect(games).toBeSortedBy('released', { descending: false });
+    });
+
+    test('Responds with paginated results (page 2)', async () => {
+        const response = await request(app)
+            .get('/api/games')
+            .query({ page: 2, limit: 10 })
+            .expect(200);
+
+        const games = response.body.games;
+        expect(games.length).toBe(10); 
+    });
+
+    test('Responds with games filtered by search query', async () => {
+        const response = await request(app)
+            .get('/api/games')
+            .query({ search: 'Overwatch' })
+            .expect(200);
+
+        const games = response.body.games;
+        expect(games.length).toBeGreaterThan(0); 
+        games.forEach((game) => {
+            expect(game.name.toLowerCase()).toContain('overwatch');
+        });
+    });
+
+    test('Responds with status 500 if limit query parameter is invalid', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        const response = await request(app)
+            .get('/api/games')
+            .query({ limit: 'invalid' })
+            .expect(500);
+
+        expect(response.body.error).toBe('Internal Server Error');
         console.error.mockRestore();
     });
-})
+});
 
 describe('GET /api/games:gameId', () => {
     test('Responds with a status 200 containing a the game requested by ID, with the correct properties', () => {

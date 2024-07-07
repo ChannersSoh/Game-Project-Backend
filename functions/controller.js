@@ -1,15 +1,16 @@
-const {retrieveAllGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveGames} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById} = require ('./model.js');
 const req = require("express/lib/request");
 
 
 
-exports.getAllGames = (req, res, next) => {
-    const limit = parseInt(req.query.limit) || 20; 
+exports.getGames = (req, res, next) => {
+    const limit = parseInt(req.query.limit) || 20;
     const page = parseInt(req.query.page) || 1;
-    const sortField = req.query.sortField || 'name';  
-    const sortOrder = req.query.sortOrder || 'asc';  
+    const sortField = req.query.sortField || 'name';
+    const sortOrder = req.query.sortOrder || 'asc';
+    const searchQuery = req.query.search || ''; 
 
-    retrieveAllGames(page, limit, sortField, sortOrder)
+    retrieveGames(page, limit, sortField, sortOrder, searchQuery)
         .then((games) => {
             res.status(200).send({ games });
         })
@@ -75,21 +76,3 @@ exports.getGameById = (req, res, next) => {
             next(err);
         });
 }
-
-exports.getGames = (req, res, next) => {
-    const searchTerm = req.query.searchTerm || '';
-    const sortField = req.query.sortField || 'name';
-    const sortOrder = req.query.sortOrder || 'asc';
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-
-    retrieveGames(searchTerm, sortField, sortOrder, page, limit)
-        .then((games) => {
-            res.status(200).send({games});
-        })
-        .catch((err) => {
-            console.log(err);
-            next(err);
-        });
-
-};
