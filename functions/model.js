@@ -4,10 +4,8 @@ const { collection, getDocs } = require('firebase/firestore');
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache();
 
-
-exports.retrieveAllGames = async (req, res, next) => {
-
-    const cacheKey = 'games_all';
+exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery) => {
+    const cacheKey = `games_all_${page}_${limit}_${sortField}_${sortOrder}_${searchQuery}`;
     const cachedData = myCache.get(cacheKey);
 
     if (cachedData) {
@@ -15,10 +13,41 @@ exports.retrieveAllGames = async (req, res, next) => {
     }
 
     try {
-        const gamesRef = db.collection('games');
-        const snapshot = await gamesRef.get();
+        const validSortFields = ['name', 'rating', 'released', 'metacritic', 'playtime'];
+        const validSortOrders = ['asc', 'desc'];
+
+        if (!validSortFields.includes(sortField)) {
+            console.warn(`Invalid sortField '${sortField}', defaulting to 'name'`);
+            sortField = 'name';
+        }
+        if (!validSortOrders.includes(sortOrder.toLowerCase())) {
+            console.warn(`Invalid sortOrder '${sortOrder}', defaulting to 'asc'`);
+            sortOrder = 'asc';
+        }
+
+        let gamesRef = db.collection('games').orderBy(sortField, sortOrder);
+
+        if (searchQuery) {
+            const searchQueryLower = searchQuery.toLowerCase(); 
+        
+            gamesRef = gamesRef.where('slug', '>=', searchQueryLower).where('slug', '<=', searchQueryLower + '\uf8ff');
+        }
+
+        const offset = (page - 1) * limit;
+        if (offset > 0) {
+            const snapshot = await gamesRef.limit(offset).get();
+            if (snapshot.docs.length < offset) {
+                console.log(`Not enough documents to start after index ${offset}`);
+                return [];
+            }
+            const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+            gamesRef = gamesRef.startAfter(lastDoc);
+        }
+
+        const snapshot = await gamesRef.limit(limit).get();
 
         if (snapshot.empty) {
+            console.log('No documents found');
             return [];
         }
 
@@ -27,17 +56,13 @@ exports.retrieveAllGames = async (req, res, next) => {
             games.push({ id: doc.id, ...doc.data() });
         });
 
-        // Set cache with a TTL of 1 hour (3600 seconds)
         myCache.set(cacheKey, games, 86400);
         return games;
     } catch (error) {
-        throw error;
+        console.error('Error retrieving games:', error);
+        throw new Error(`Firestore query failed: ${error.message}`);
     }
-}
-
-
-
-
+};
 
 exports.selectPlatforms = async (req, res, next) => {
     try {

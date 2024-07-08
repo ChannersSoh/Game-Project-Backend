@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getAllGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById} = require('./controller.js');
+const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById} = require('./controller.js');
 
 /*
 Charnjeet
@@ -30,16 +30,32 @@ Pagenation
 
 const app = express();
 
+app.use(cors());
+
 app.get('/api/platforms', selectPlatforms); //remove later
 app.get('/api/genres', getAllGenres);
-app.get('/api/games', getAllGames);
+app.get('/api/games', getGames);
 app.get('/api/publishers', getAllPublishers);
 app.get('/api/developers', getAllDevelopers);
 app.get('/api/games/:gameId', getGameById);
 
 app.get('/api/games-test', getGameTest);
 
-app.use(cors());
+app.use((req, res, next) => {
+    res.status(404).send({ msg: 'Not Found' });
+});
+
+app.use((err, req, res, next) => {
+    if (err.status && err.msg) {
+        res.status(err.status).send({ msg: err.msg });
+    } else if (err.code === '22P02') {
+        res.status(400).send({ msg: 'Invalid Input' });
+    } else if (err.code === '23503') {
+        res.status(404).send({ msg: 'Not Found' });
+    } else {
+        res.status(500).send('Server Error');
+    }
+});
 
 
 // module.exports = { app };
