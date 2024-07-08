@@ -76,3 +76,21 @@ exports.getGameById = (req, res, next) => {
             next(err);
         });
 }
+
+exports.getGamesByGenre = (req, res, next) => {
+    const genreSlug = req.params.genreSlug;
+    const limit = parseInt(req.query.limit) || 20;
+    const page = parseInt(req.query.page) || 1;
+    const sortField = req.query.sortField || 'name';
+    const sortOrder = req.query.sortOrder || 'asc';
+    const searchQuery = req.query.search || ''; 
+
+    retrieveGames(page, limit, sortField, sortOrder, searchQuery, genreSlug)
+        .then((games) => {
+            res.status(200).send({ games });
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+};

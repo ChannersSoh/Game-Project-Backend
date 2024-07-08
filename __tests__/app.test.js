@@ -27,7 +27,7 @@ describe('GET /api/genres', () => {
     })
 })
 
-describe.only('GET /api/games', () => {
+describe('GET /api/games', () => {
     test('Responds with a status 200 containing an array of game objects', () => {
         return request(app)
             .get('/api/games')
@@ -77,10 +77,10 @@ describe.only('GET /api/games', () => {
         expect(games.length).toBe(10); 
     });
 
-    test.only('Responds with games filtered by search query', async () => {
+    test('Responds with games filtered by search query', async () => {
         const response = await request(app)
             .get('/api/games')
-            .query({ search: 'overwatch' })  // Using lowercase
+            .query({ search: 'overwatch' }) 
             .expect(200);
     
         const games = response.body.games;
@@ -102,6 +102,78 @@ describe.only('GET /api/games', () => {
         console.error.mockRestore();
     });
 });
+
+describe.only('GET /api/games/genres/:genreSlug', () => {
+    test('Responds with a status 200 and a list of games for the specified genre', () => {
+        const genreSlug = 'action'; 
+        return request(app)
+            .get(`/api/games/genres/${genreSlug}`)
+            .expect(200)
+            .then((response) => {
+                const games = response.body.games;
+                expect(games).toBeInstanceOf(Array);
+                expect(games.length).toBeGreaterThan(0); 
+                games.forEach((game) => {
+                    expect(game).toMatchObject({
+                        name: expect.any(String),
+                        id: expect.any(Number),
+                        slug: expect.any(String),
+                        background_image: expect.any(String),
+                    });
+                });
+            });
+    });
+
+    test('Responds with status 404 if the genre is not found', () => {
+        const invalidGenreSlug = 'invalid-genre';
+        return request(app)
+            .get(`/api/games/genres/${invalidGenreSlug}`)
+            .expect(404)
+            .then((response) => {
+                expect(response.body.error).toBe('Genre not found');
+            });
+    });
+
+    test('Responds with games sorted by rating in descending order for the specified genre', () => {
+        const genreSlug = 'action';
+        return request(app)
+            .get(`/api/games/genres/${genreSlug}`)
+            .query({ sortField: 'rating', sortOrder: 'desc' })
+            .expect(200)
+            .then((response) => {
+                const games = response.body.games;
+                expect(games.length).toBeGreaterThan(0);
+                expect(games).toBeSortedBy('rating', { descending: true });
+            });
+    });
+
+    test('Responds with paginated results for the specified genre (page 2)', () => {
+        const genreSlug = 'action';
+        return request(app)
+            .get(`/api/games/genres/${genreSlug}`)
+            .query({ page: 2, limit: 10 })
+            .expect(200)
+            .then((response) => {
+                const games = response.body.games;
+                expect(games.length).toBe(10);
+            });
+    });
+
+    test('Responds with status 500 if limit query parameter is invalid', () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        const genreSlug = 'action';
+        return request(app)
+            .get(`/api/games/genres/${genreSlug}`)
+            .query({ limit: 'invalid' })
+            .expect(500)
+            .then((response) => {
+                expect(response.body.error).toBe('Internal Server Error');
+                console.error.mockRestore();
+            });
+    });
+});
+
 
 describe('GET /api/games:gameId', () => {
     test('Responds with a status 200 containing a the game requested by ID, with the correct properties', () => {
