@@ -1,7 +1,16 @@
-const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreference} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreference} = require ('./model.js');
 const req = require("express/lib/request");
 
-
+exports.getAllGames = (req, res, next) => {
+    retrieveAllGames()
+    .then((games) => {
+        res.status(200).send({games});
+    })
+    .catch((err) => {
+        console.log(err);
+        next(err);
+    });
+}
 
 exports.getGames = (req, res, next) => {
     const limit = parseInt(req.query.limit) || 20;
@@ -184,5 +193,4 @@ exports.deletePreference = (req, res, next) => {
 
 }
 
-};
 

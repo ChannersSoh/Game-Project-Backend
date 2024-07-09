@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference} = require('./controller.js');
+const {getGames, getAllGenres, getAllGames, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference} = require('./controller.js');
 
 /*
 Charnjeet
@@ -34,7 +34,8 @@ app.use(express.json());
 
 app.get('/api/platforms', selectPlatforms); //remove later
 app.get('/api/genres', getAllGenres);
-app.get('/api/games', getGames);
+app.get('/api/allgames', getAllGames); //this endpoint is for the recommendations only
+app.get('/api/games', getGames); //this is similar to get all games but is pageinated so it is for general use
 app.get('/api/publishers', getAllPublishers);
 app.get('/api/developers', getAllDevelopers);
 app.get('/api/games/:gameId', getGameById);
@@ -67,6 +68,6 @@ app.use((err, req, res, next) => {
 });
 
 
-module.exports = { app };
+// module.exports = { app };
 
-// exports.app = functions.https.onRequest(app);
+exports.app = functions.https.onRequest(app);

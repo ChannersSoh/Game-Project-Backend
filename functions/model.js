@@ -5,6 +5,38 @@ const NodeCache = require( "node-cache" );
 const {admin} = require("./admin");
 const myCache = new NodeCache();
 
+exports.retrieveAllGames = async () => {
+    const cacheKey = 'all_games';
+    const cachedGames = myCache.get(cacheKey);
+
+    if (cachedGames) {
+        console.log('Returning cached data');
+        return cachedGames;
+    }
+
+    try {
+        const gameCollection = db.collection('games');
+        const snapshot = await gameCollection.get();
+
+        if (snapshot.empty) {
+            console.log('No documents found');
+            return [];
+        }
+
+        const games = [];
+        snapshot.forEach(doc => {
+            games.push({ id: doc.id, ...doc.data() });
+        });
+
+        myCache.set(cacheKey, games, 86400);
+
+        return games;
+    } catch (error) {
+        console.error('Error retrieving games:', error);
+        throw new Error(`Firestore query failed: ${error.message}`);
+    }
+};
+
 exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery, genreSlug) => {
     const cacheKey = `games_all_${page}_${limit}_${sortField}_${sortOrder}_${searchQuery}_${genreSlug}`;
     const cachedData = myCache.get(cacheKey);

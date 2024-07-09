@@ -102,7 +102,7 @@ describe('GET /api/games', () => {
     });
 });
 
-describe.only('GET /api/games/genres/:genreSlug', () => {
+describe('GET /api/games/genres/:genreSlug', () => {
     test('Responds with a status 200 and a list of games for the specified genre', () => {
         const genreSlug = 'action'; 
         return request(app)
