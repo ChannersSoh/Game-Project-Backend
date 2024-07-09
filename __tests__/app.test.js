@@ -221,11 +221,11 @@ describe('POST & DELETE /api/users/:userId/wishlist', () => {
             .send(testPostComment)
             .expect(201)
             .then(({ body }) => {
-                expect(body.postedWish.wishlist).toEqual([{ type: 'genre', body: 'RPG' }]);
+                expect(body.wishlist).toEqual([{ type: 'genre', body: 'RPG' }]);
                 console.log(body);
             });
     });
-    test('Responds with a status 201 containing the posted item', () => {
+    test('Responds with a status 204 with an empty array where the ', () => {
         return request(app)
             .delete('/api/users/test/wishlist/delete/RPG') //
             .expect(204)
@@ -235,24 +235,24 @@ describe('POST & DELETE /api/users/:userId/wishlist', () => {
     });
 });
 
-// describe('POST & DELETE /api/users/:userId/preferences', () => {
-//     test('Responds with a status 201 containing the posted item', () => {
-//         const testPostComment = { type: 'genre', body: 'RPG' };
-//         return request(app)
-//             .post('/api/users/test/wishlist/add') // Use a test user ID
-//             .send(testPostComment)
-//             .expect(201)
-//             .then(({ body }) => {
-//                 expect(body.postedWish.wishlist).toEqual([{ type: 'genre', body: 'RPG' }]);
-//                 console.log(body);
-//             });
-//     });
-//     test('Responds with a status 201 containing the posted item', () => {
-//         return request(app)
-//             .delete('/api/users/test/wishlist/delete/RPG') //
-//             .expect(204)
-//             .then(({ body }) => {
-//                 expect(body).toEqual({});
-//             });
-//     });
-// });
+describe('POST & DELETE /api/users/:userId/preferences', () => {
+    test('Responds with a status 201 containing the posted item', () => {
+        const testPostComment = { type: 'preference', body: 'RPG' };
+        return request(app)
+            .post('/api/users/test/preferences/add') // Use a test user ID
+            .send(testPostComment)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.preferences).toEqual([{ type: 'genre', body: 'RPG' }]);
+                console.log(body);
+            });
+    });
+    test.only('Responds with a status 201 containing the posted item', () => {
+        return request(app)
+            .delete('/api/users/test/wishlist/delete/RPG') //
+            .expect(204)
+            .then(({ body }) => {
+                expect(body).toEqual({});
+            });
+    });
+});

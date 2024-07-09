@@ -1,4 +1,6 @@
-const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreference} = require ('./model.js');
+
+const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreference, patchAvatar} = require ('./model.js');
+
 const req = require("express/lib/request");
 
 exports.getAllGames = (req, res, next) => {
@@ -169,7 +171,7 @@ exports.postPreference = (req, res, next) => {
     const newPref = req.body;
 
 
-    addToWishlist(userId, newPref)
+    addToPreferences(userId, newPref)
         .then((postedPref) => {
             res.status(201).send({postedPref});
         })
@@ -182,15 +184,27 @@ exports.postPreference = (req, res, next) => {
 
 exports.deletePreference = (req, res, next) => {
     const {userId, toDel} = req.params;
-    removePreference(userId, toDel)
-        .then((deletedWish) => {
-            res.status(204).send({deletedWish});
+    removePreferences(userId, toDel)
+        .then((deletedPref) => {
+            res.status(204).send({deletedPref});
         })
         .catch((err) => {
             console.log(err);
             next(err);
         });
+};
 
+exports.changeAvatar = (req, res, next) => {
+    const {userId} = req.params;
+    const newAvatar = req.body;
+
+    patchAvatar(userId, newAvatar)
+        .then((postedAvatar) => {
+            res.status(201).send({postedAvatar});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
 }
-
 
