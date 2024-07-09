@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById} = require('./controller.js');
+const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre} = require('./controller.js');
 
 /*
 Charnjeet
@@ -38,6 +38,7 @@ app.get('/api/games', getGames);
 app.get('/api/publishers', getAllPublishers);
 app.get('/api/developers', getAllDevelopers);
 app.get('/api/games/:gameId', getGameById);
+app.get('/api/games/genres/:genreSlug', getGamesByGenre)
 
 app.get('/api/games-test', getGameTest);
 

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const db = require('../functions/firestore');
+const {db} = require('../functions/admin');
 
 function uploadToFirestore(collectionName, data) {
     const collectionRef = db.collection(collectionName);
@@ -8,7 +8,7 @@ function uploadToFirestore(collectionName, data) {
 
     data.forEach(item => {
         const docRef = collectionRef.doc(item.id.toString());
-        batch.set(docRef, item);
+        batch.set(docRef, item, { merge: true });
     });
 
     return batch.commit();
@@ -36,10 +36,7 @@ function readAndUpload(fileName, collectionName) {
 }
 
 const filesAndCollections = [
-    { fileName: 'games_with_descriptions.json', collectionName: 'games' },
-    { fileName: 'publishers.json', collectionName: 'publishers' },
-    { fileName: 'genres.json', collectionName: 'genres' },
-    { fileName: 'developers.json', collectionName: 'developers' }
+    { fileName: 'games_with_descriptions_updated.json', collectionName: 'games' }
 ];
 
 

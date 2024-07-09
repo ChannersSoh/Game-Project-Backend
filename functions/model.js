@@ -4,8 +4,8 @@ const { collection, getDocs } = require('firebase/firestore');
 const NodeCache = require( "node-cache" );
 const myCache = new NodeCache();
 
-exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery) => {
-    const cacheKey = `games_all_${page}_${limit}_${sortField}_${sortOrder}_${searchQuery}`;
+exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery, genreSlug) => {
+    const cacheKey = `games_all_${page}_${limit}_${sortField}_${sortOrder}_${searchQuery}_${genreSlug}`;
     const cachedData = myCache.get(cacheKey);
 
     if (cachedData) {
@@ -31,6 +31,10 @@ exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery) =
             const searchQueryLower = searchQuery.toLowerCase(); 
         
             gamesRef = gamesRef.where('slug', '>=', searchQueryLower).where('slug', '<=', searchQueryLower + '\uf8ff');
+        }
+
+        if (genreSlug) {
+            gamesRef = gamesRef.where('genreSlugs', 'array-contains', genreSlug);
         }
 
         const offset = (page - 1) * limit;
