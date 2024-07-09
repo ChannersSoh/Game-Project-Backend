@@ -31,6 +31,8 @@ Pagenation
 
 const app = express();
 
+app.use(cors({ origin: true }));
+
 app.use(express.json());
 
 app.get('/api/platforms', selectPlatforms); //remove later
@@ -71,4 +73,4 @@ app.use((err, req, res, next) => {
 
 // module.exports = { app };
 
-exports.app = functions.https.onRequest(app);
+exports.app = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(app);
