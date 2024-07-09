@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getGames, getAllGenres, getAllGames, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference, changeAvatar, getAllEndpoints} = require('./controller.js');
+const {getGames, getAllGenres, getAllGames, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference, changeAvatar, getAllEndpoints, postToLibrary, deleteFromLibrary} = require('./controller.js');
 
 
 
@@ -29,6 +29,8 @@ app.post('/api/users/:userId/wishlist/add', postToWishlist);
 app.delete('/api/users/:userId/wishlist/delete/:toDel', deleteFromWishlist);
 app.post('/api/users/:userId/preferences/add', postPreference);
 app.delete('/api/users/:userId/preferences/delete/:toDel', deletePreference);
+app.post('/api/users/:userId/library/add', postToLibrary);
+app.delete('/api/users/:userId/library/delete/:toDel', deleteFromLibrary);
 app.patch('/api/users/:userId/patch_avatar', changeAvatar);
 
 app.use((req, res, next) => {
@@ -48,6 +50,6 @@ app.use((err, req, res, next) => {
 });
 
 
-module.exports = { app };
+// module.exports = { app };
 
-// exports.app = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(app);
+exports.app = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(app);

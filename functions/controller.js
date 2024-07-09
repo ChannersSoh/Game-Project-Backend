@@ -1,5 +1,5 @@
 
-const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, patchAvatar, fetchAllEndpoints} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, addToLibrary, removeFromLibrary,  patchAvatar, fetchAllEndpoints} = require ('./model.js');
 
 const req = require("express/lib/request");
 
@@ -209,6 +209,37 @@ exports.changeAvatar = (req, res, next) => {
         });
 }
 
+exports.postToLibrary = (req, res, next) => {
+    const {userId} = req.params;
+    const libraryAdd = req.body;
+
+
+
+    addToLibrary(userId, libraryAdd)
+        .then((postedWish) => {
+            res.status(201).send({postedWish});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+
+}
+
+exports.deleteFromLibrary = (req, res, next) => {
+    const {userId, toDel} = req.params;
+
+    removeFromLibrary(userId, toDel)
+        .then((deletedLibrary) => {
+            res.status(204).send({deletedLibrary});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+
+}
+
 exports.getAllEndpoints = (req, res, next) => {
 
     fetchAllEndpoints()
@@ -220,4 +251,6 @@ exports.getAllEndpoints = (req, res, next) => {
             next(err);
         });
 }
+
+
 

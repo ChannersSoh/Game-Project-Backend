@@ -359,6 +359,57 @@ exports.removePreferences = async (userId, delPref, res, next) => {
     }
 };
 
+exports.addToLibrary = async (userId, libraryAdd, res, next) => {
+
+    try {
+        const userByUid = db.collection('users').doc(userId);
+        const fetchedUser = await userByUid.get();
+        const userLibrary = fetchedUser.data().library;
+        const updatedPrefList = userLibrary.concat(libraryAdd);
+
+        await userByUid.update({
+            library: updatedPrefList
+        });
+
+        const updatedUserDoc = await userByUid.get();
+        if (!updatedUserDoc.exists) {
+            throw new Error('User does not exist');
+        } else {
+            return updatedUserDoc.data();
+        }
+
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+exports.removeFromLibrary = async (userId, libraryDel, res, next) => {
+
+    try {
+        const userByUid = db.collection('users').doc(userId);
+        const fetchedDoc = await userByUid.get();
+
+        if (!fetchedDoc.exists) {
+            throw new Error('User does not exist');
+        }
+
+        const userLibrary = fetchedDoc.data().preferences;
+        const updatedLibrary = userLibrary.filter((item) => item !== libraryDel);
+
+        await userByUid.update({
+            preferences: updatedLibrary
+        });
+        const updatedUserDoc = await userByUid.get();
+
+
+        return updatedUserDoc.data();
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
 exports.patchAvatar = async (userId, newAvatar, res, next) => {
     try {
         const userByUid = db.collection('users').doc(userId);
