@@ -247,12 +247,25 @@ describe('POST & DELETE /api/users/:userId/preferences', () => {
                 console.log(body);
             });
     });
-    test.only('Responds with a status 201 containing the posted item', () => {
+    test('Responds with a status 201 containing the posted item', () => {
         return request(app)
             .delete('/api/users/test/wishlist/delete/RPG') //
             .expect(204)
             .then(({ body }) => {
                 expect(body).toEqual({});
+            });
+    });
+});
+
+describe('Patch /api/users/:userId/patch_avatar', () => {
+    test.only('Responds with a status 201 containing the posted item', () => {
+        const testPostAvatar = { avatarURL :'https://i2-prod.stokesentinel.co.uk/incoming/article9009038.ece/ALTERNATES/s810/0_Screenshot-2024-01-02-140517.jpg'};
+        return request(app)
+            .patch('/api/users/test/patch_avatar') // Use a test user ID
+            .send(testPostAvatar)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.preferences).toEqual(testPostAvatar);
             });
     });
 });

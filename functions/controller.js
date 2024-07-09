@@ -198,7 +198,9 @@ exports.changeAvatar = (req, res, next) => {
     const {userId} = req.params;
     const newAvatar = req.body;
 
-    patchAvatar(userId, newAvatar)
+    console.log(newAvatar)
+
+    patchAvatar(userId, newAvatar.avatarURL)
         .then((postedAvatar) => {
             res.status(201).send({postedAvatar});
         })

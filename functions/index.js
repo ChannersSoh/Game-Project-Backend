@@ -48,7 +48,7 @@ app.post('/api/users/:userId/wishlist/add', postToWishlist);
 app.delete('/api/users/:userId/wishlist/delete/:toDel', deleteFromWishlist);
 app.post('/api/users/:userId/preferences/add', postPreference);
 app.delete('/api/users/:userId/preferences/delete/:toDel', deletePreference);
-app.patch('/api/users/:userId/patch_avatar/', changeAvatar);
+app.patch('/api/users/:userId/patch_avatar', changeAvatar);
 
 app.get('/api/games-test', getGameTest);
 
