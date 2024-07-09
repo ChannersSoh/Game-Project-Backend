@@ -8,7 +8,6 @@ const gamesWithDescriptionsData = require('../api-data/data/games_with_descripti
 const genresData = require('../api-data/data/genres.json');
 const publishersData = require('../api-data/data/publishers.json');
 
-
 describe('GET /api/genres', () => {
     test('Responds with a status 200 containing an array of objects, each representing the genres of games found in our database', () => {
         return request(app).get('/api/genres').expect(200)
@@ -213,3 +212,47 @@ describe('GET /api/games:gameId', () => {
     })
 })
 
+
+describe('POST & DELETE /api/users/:userId/wishlist', () => {
+    test('Responds with a status 201 containing the posted item', () => {
+        const testPostComment = { type: 'genre', body: 'RPG' };
+        return request(app)
+            .post('/api/users/test/wishlist/add') // Use a test user ID
+            .send(testPostComment)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.postedWish.wishlist).toEqual([{ type: 'genre', body: 'RPG' }]);
+                console.log(body);
+            });
+    });
+    test('Responds with a status 201 containing the posted item', () => {
+        return request(app)
+            .delete('/api/users/test/wishlist/delete/RPG') //
+            .expect(204)
+            .then(({ body }) => {
+                expect(body).toEqual({});
+            });
+    });
+});
+
+// describe('POST & DELETE /api/users/:userId/preferences', () => {
+//     test('Responds with a status 201 containing the posted item', () => {
+//         const testPostComment = { type: 'genre', body: 'RPG' };
+//         return request(app)
+//             .post('/api/users/test/wishlist/add') // Use a test user ID
+//             .send(testPostComment)
+//             .expect(201)
+//             .then(({ body }) => {
+//                 expect(body.postedWish.wishlist).toEqual([{ type: 'genre', body: 'RPG' }]);
+//                 console.log(body);
+//             });
+//     });
+//     test('Responds with a status 201 containing the posted item', () => {
+//         return request(app)
+//             .delete('/api/users/test/wishlist/delete/RPG') //
+//             .expect(204)
+//             .then(({ body }) => {
+//                 expect(body).toEqual({});
+//             });
+//     });
+// });

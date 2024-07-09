@@ -2,6 +2,7 @@ const { db } = require("./admin.js");
 const { collection, getDocs } = require('firebase/firestore');
 
 const NodeCache = require( "node-cache" );
+const {admin} = require("./admin");
 const myCache = new NodeCache();
 
 exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery, genreSlug) => {
@@ -186,6 +187,143 @@ exports.retrieveGameById = async (req, res, next) => {
             return doc.data();
         }
 
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+exports.retrieveAllUsers = async (req, res, next) => {
+    try {
+        const allUsersDB = db.collection('users');
+        const snapshot = await allUsersDB.get();
+
+        if (snapshot.empty) {
+            res.status(404).send('No games Found');
+            return;
+        }
+
+        const users = [];
+        snapshot.forEach(doc => {
+            users.push({ id: doc.id, ...doc.data() });
+        });
+
+        return users;
+    } catch (error) {
+
+        res.status(400).send(error.message);
+    }
+}
+
+exports.retrieveUserByUid = async (req, res, next) => {
+    try {
+        const userData = db.collection('users').doc(req);
+        const doc = await userData.get();
+        if (!doc.exists) {
+        } else {
+            return doc.data();
+        }
+
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+exports.addToWishlist = async (userId, newWish, res, next) => {
+    console.log(userId);
+    console.log(newWish);
+    try {
+        const userByUid = db.collection('users').doc(userId);
+        await userByUid.update({
+            wishlist: admin.firestore.FieldValue.arrayUnion(newWish)
+        });
+
+        const updatedUserDoc = await userByUid.get();
+        if (!updatedUserDoc.exists) {
+            throw new Error('User does not exist');
+        } else {
+            return updatedUserDoc.data();
+        }
+
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+exports.removeFromWishlist = async (userId, delWish, res, next) => {
+
+    try {
+        const userByUid = db.collection('users').doc(userId);
+        const fetchedDoc = await userByUid.get();
+
+        if (!fetchedDoc.exists) {
+            throw new Error('User does not exist');
+        }
+
+        const userWishlist = fetchedDoc.data().preferences;
+        console.log(userWishlist);
+        const updatedWishlist = userWishlist.filter((wish) => wish.body !== delWish);
+
+        await userByUid.update({
+            preferences: updatedWishlist
+        });
+        const updatedUserDoc = await userByUid.get();
+        console.log(updatedUserDoc.data);
+
+
+        return updatedUserDoc.data();
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+exports.addToPreferences = async (userId, newPref, res, next) => {
+    console.log(userId);
+    console.log(newPref);
+    try {
+        const userByUid = db.collection('users').doc(userId);
+        await userByUid.update({
+            preferences: admin.firestore.FieldValue.arrayUnion(newPref)
+        });
+
+        const updatedUserDoc = await userByUid.get();
+        if (!updatedUserDoc.exists) {
+            throw new Error('User does not exist');
+        } else {
+            return updatedUserDoc.data();
+        }
+
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+exports.removePreferences = async (userId, delPref, res, next) => {
+
+    try {
+        const userByUid = db.collection('users').doc(userId);
+        const fetchedDoc = await userByUid.get();
+
+        if (!fetchedDoc.exists) {
+            throw new Error('User does not exist');
+        }
+
+        const userPreflist = fetchedDoc.data().preferences;
+        console.log(userPreflist);
+        const updatedPreflist = userPreflist.filter((wish) => wish.body !== delPref);
+
+        await userByUid.update({
+            preferences: updatedPreflist
+        });
+        const updatedUserDoc = await userByUid.get();
+        console.log(updatedUserDoc.data);
+
+
+        return updatedUserDoc.data();
 
     } catch (error) {
         res.status(400).send(error.message);
