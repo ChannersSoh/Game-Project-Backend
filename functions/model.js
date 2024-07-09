@@ -231,8 +231,6 @@ exports.retrieveUserByUid = async (req, res, next) => {
 };
 
 exports.addToWishlist = async (userId, newWish, res, next) => {
-    console.log(userId);
-    console.log(newWish);
     try {
         const userByUid = db.collection('users').doc(userId);
         await userByUid.update({
@@ -262,12 +260,12 @@ exports.removeFromWishlist = async (userId, delWish, res, next) => {
             throw new Error('User does not exist');
         }
 
-        const userWishlist = fetchedDoc.data().preferences;
+        const userWishlist = fetchedDoc.data().wishlist;
         console.log(userWishlist);
         const updatedWishlist = userWishlist.filter((wish) => wish.body !== delWish);
 
         await userByUid.update({
-            preferences: updatedWishlist
+            wishlist: updatedWishlist
         });
         const updatedUserDoc = await userByUid.get();
         console.log(updatedUserDoc.data);
@@ -290,6 +288,7 @@ exports.addToPreferences = async (userId, newPref, res, next) => {
         });
 
         const updatedUserDoc = await userByUid.get();
+        console.log(updatedUserDoc.data);
         if (!updatedUserDoc.exists) {
             throw new Error('User does not exist');
         } else {
@@ -313,7 +312,6 @@ exports.removePreferences = async (userId, delPref, res, next) => {
         }
 
         const userPreflist = fetchedDoc.data().preferences;
-        console.log(userPreflist);
         const updatedPreflist = userPreflist.filter((wish) => wish.body !== delPref);
 
         await userByUid.update({

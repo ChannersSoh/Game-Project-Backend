@@ -1,4 +1,4 @@
-const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreference} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences } = require ('./model.js');
 const req = require("express/lib/request");
 
 
@@ -160,7 +160,7 @@ exports.postPreference = (req, res, next) => {
     const newPref = req.body;
 
 
-    addToWishlist(userId, newPref)
+    addToPreferences(userId, newPref)
         .then((postedPref) => {
             res.status(201).send({postedPref});
         })
@@ -173,16 +173,14 @@ exports.postPreference = (req, res, next) => {
 
 exports.deletePreference = (req, res, next) => {
     const {userId, toDel} = req.params;
-    removePreference(userId, toDel)
-        .then((deletedWish) => {
-            res.status(204).send({deletedWish});
+    removePreferences(userId, toDel)
+        .then((deletedPref) => {
+            res.status(204).send({deletedPref});
         })
         .catch((err) => {
             console.log(err);
             next(err);
         });
-
-}
 
 };
 
