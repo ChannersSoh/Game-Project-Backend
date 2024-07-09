@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference} = require('./controller.js');
+const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference, changeAvatar} = require('./controller.js');
 
 /*
 Charnjeet
@@ -44,9 +44,9 @@ app.get('/api/users', getAllUsers);
 app.get('/api/users/:userId', getUserByUid);
 app.post('/api/users/:userId/wishlist/add', postToWishlist);
 app.delete('/api/users/:userId/wishlist/delete/:toDel', deleteFromWishlist);
-
 app.post('/api/users/:userId/preferences/add', postPreference);
 app.delete('/api/users/:userId/preferences/delete/:toDel', deletePreference);
+app.patch('/api/users/:userId/patch_avatar/', changeAvatar);
 
 app.get('/api/games-test', getGameTest);
 
@@ -67,6 +67,6 @@ app.use((err, req, res, next) => {
 });
 
 
-module.exports = { app };
+// module.exports = { app };
 
-// exports.app = functions.https.onRequest(app);
+exports.app = functions.https.onRequest(app);

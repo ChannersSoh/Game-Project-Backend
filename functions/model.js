@@ -327,3 +327,27 @@ exports.removePreferences = async (userId, delPref, res, next) => {
         res.status(400).send(error.message);
     }
 };
+
+exports.patchAvatar = async (userId, newAvatar, res, next) => {
+    console.log(userId);
+    console.log(newAvatar);
+    try {
+        const userByUid = db.collection('users').doc(userId);
+        await userByUid.update({
+            avatar: newAvatar
+        });
+
+        const updatedUserDoc = await userByUid.get();
+        console.log(updatedUserDoc.data);
+        if (!updatedUserDoc.exists) {
+            throw new Error('User does not exist');
+        } else {
+            return updatedUserDoc.data();
+        }
+
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+

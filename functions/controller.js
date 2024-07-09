@@ -1,4 +1,4 @@
-const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences } = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, patchAvatar } = require ('./model.js');
 const req = require("express/lib/request");
 
 
@@ -183,4 +183,18 @@ exports.deletePreference = (req, res, next) => {
         });
 
 };
+
+exports.changeAvatar = (req, res, next) => {
+    const {userId} = req.params;
+    const newAvatar = req.body;
+
+    patchAvatar(userId, newAvatar)
+        .then((postedAvatar) => {
+            res.status(201).send({postedAvatar});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+}
 
