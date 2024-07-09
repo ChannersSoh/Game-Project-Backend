@@ -141,7 +141,7 @@ const publishersData = require('../api-data/data/publishers.json');
 //     })
 // })
 
-describe('POST /api/users/:userId/wishlist/add', () => {
+describe('POST & DELETE /api/users/:userId/wishlist', () => {
     test('Responds with a status 201 containing the posted item', () => {
         const testPostComment = { type: 'genre', body: 'RPG' };
         return request(app)
@@ -153,10 +153,7 @@ describe('POST /api/users/:userId/wishlist/add', () => {
                 console.log(body);
             });
     });
-});
-
-describe('Delete /api/users/:userId/wishlist/remove', () => {
-    test.only('Responds with a status 201 containing the posted item', () => {
+    test('Responds with a status 201 containing the posted item', () => {
         return request(app)
             .delete('/api/users/test/wishlist/delete/RPG') //
             .expect(204)
@@ -165,3 +162,25 @@ describe('Delete /api/users/:userId/wishlist/remove', () => {
             });
     });
 });
+
+// describe('POST & DELETE /api/users/:userId/preferences', () => {
+//     test('Responds with a status 201 containing the posted item', () => {
+//         const testPostComment = { type: 'genre', body: 'RPG' };
+//         return request(app)
+//             .post('/api/users/test/wishlist/add') // Use a test user ID
+//             .send(testPostComment)
+//             .expect(201)
+//             .then(({ body }) => {
+//                 expect(body.postedWish.wishlist).toEqual([{ type: 'genre', body: 'RPG' }]);
+//                 console.log(body);
+//             });
+//     });
+//     test('Responds with a status 201 containing the posted item', () => {
+//         return request(app)
+//             .delete('/api/users/test/wishlist/delete/RPG') //
+//             .expect(204)
+//             .then(({ body }) => {
+//                 expect(body).toEqual({});
+//             });
+//     });
+// });
