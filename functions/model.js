@@ -4,6 +4,7 @@ const { collection, getDocs } = require('firebase/firestore');
 const NodeCache = require( "node-cache" );
 const {admin} = require("./admin");
 const myCache = new NodeCache();
+const allEndpoints = require('./endpoints.json')
 
 exports.retrieveAllGames = async () => {
     const cacheKey = 'all_games';
@@ -199,7 +200,6 @@ exports.retrieveGameTest = async (req, res, next) => {
         }
 
         const gameTest = [];
-        console.log(snapshot);
         snapshot.forEach(doc => {
             gameTest.push({ id: doc.id, ...doc.data() });
         });
@@ -293,14 +293,12 @@ exports.removeFromWishlist = async (userId, delWish, res, next) => {
         }
 
         const userWishlist = fetchedDoc.data().wishlist;
-        console.log(userWishlist);
         const updatedWishlist = userWishlist.filter((wish) => wish.body !== delWish);
 
         await userByUid.update({
             wishlist: updatedWishlist
         });
         const updatedUserDoc = await userByUid.get();
-        console.log(updatedUserDoc.data);
 
 
         return updatedUserDoc.data();
@@ -311,16 +309,18 @@ exports.removeFromWishlist = async (userId, delWish, res, next) => {
 };
 
 exports.addToPreferences = async (userId, newPref, res, next) => {
-    console.log(userId);
-    console.log(newPref);
+
     try {
         const userByUid = db.collection('users').doc(userId);
+        const fetchedUser = await userByUid.get();
+        const userPreflist = fetchedUser.data().preferences;
+        const updatedPrefList = userPreflist.concat(newPref);
+
         await userByUid.update({
-            preferences: admin.firestore.FieldValue.arrayUnion(newPref)
+            preferences: updatedPrefList
         });
 
         const updatedUserDoc = await userByUid.get();
-        console.log(updatedUserDoc.data);
         if (!updatedUserDoc.exists) {
             throw new Error('User does not exist');
         } else {
@@ -344,13 +344,12 @@ exports.removePreferences = async (userId, delPref, res, next) => {
         }
 
         const userPreflist = fetchedDoc.data().preferences;
-        const updatedPreflist = userPreflist.filter((wish) => wish.body !== delPref);
+        const updatedPreflist = userPreflist.filter((pref) => pref !== delPref);
 
         await userByUid.update({
             preferences: updatedPreflist
         });
         const updatedUserDoc = await userByUid.get();
-        console.log(updatedUserDoc.data);
 
 
         return updatedUserDoc.data();
@@ -376,6 +375,15 @@ exports.patchAvatar = async (userId, newAvatar, res, next) => {
 
 
     } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+exports.fetchAllEndpoints = async (req, res, next) => {
+    try {
+            return allEndpoints;
+        }
+        catch (error) {
         res.status(400).send(error.message);
     }
 };

@@ -1,0 +1,799 @@
+{
+  "GET /api": {
+    "description": "serves up a json representation of all the available endpoints of the api",
+    "queries": [],
+    "exampleResponse": {
+      "GET /api/genres": {
+        "description": "serves an array of all genres",
+        "queries": [],
+        "exampleResponse": {
+          "genres": [
+            {
+              "id": 1,
+              "games_count": 24820,
+              "name": "Racing",
+              "games": [
+                {
+                  "added": 12353,
+                  "name": "Rocket League",
+                  "id": 3272,
+                  "slug": "rocket-league"
+                }
+              ],
+              "image_background": "https://media.rawg.io/media/games/370/3703c683968a54f09630dcf03366ea35.jpg",
+              "slug": "racing"
+            }
+          ]
+        }
+      },
+      "GET /api/allgames": {
+        "description": "serves an array of all games for recommendations",
+        "queries": [],
+        "exampleResponse": {
+          "games": [
+            {
+              "id": 10001,
+              "name": "Serious Sam Fusion 2017 (beta)",
+              "description": "Serious Sam Fusion 2017 is a special edition of the original first-person shooter series. This is a central hub for the whole Serious Sam franchise, which includes remastered and VR versions of both First and Second Encounters, and Serious Sam 3: BFE. The series follows Sam Stone’s adventures set in the environment of Egyptian pyramids, jungles and medieval castles. According to the plot, the protagonist fights against science-fictional extraterrestrial forces and their leader Mental, whose only aim is the devastation of humanity. The gameplay consists of eliminating waves of re-spawning invaders all across the game map. Enemies themselves range from basic soldiers to gigantic robots. As far as health and armor are non-regenerative, players controlling Sam have to gather special packs, which are scattered all around, in addition to dodging aliens’ attacks. From the technical side remasters offer lots of graphical issues and fixtures. The 2017 Fusion also allows players to maneuver within the whole series not exiting the game.",
+              "released": "2017-03-20",
+              "background_image": "https://media.rawg.io/media/games/21b/21babfc41e2a6972290833d1b860f13e.jpg",
+              "rating": 3.06,
+              "rating_top": 4,
+              "ratings": [
+                {
+                  "id": 4,
+                  "title": "recommended",
+                  "count": 118,
+                  "percent": 36.31
+                },
+                {
+                  "id": 3,
+                  "title": "meh",
+                  "count": 96,
+                  "percent": 29.54
+                },
+                {
+                  "id": 1,
+                  "title": "skip",
+                  "count": 80,
+                  "percent": 24.62
+                },
+                {
+                  "id": 5,
+                  "title": "exceptional",
+                  "count": 31,
+                  "percent": 9.54
+                }
+              ],
+              "ratings_count": 325,
+              "suggestions_count": 548,
+              "reviews_count": 325,
+              "reviews_text_count": 0,
+              "added": 5218,
+              "added_by_status": {
+                "beaten": 73,
+                "dropped": 121,
+                "owned": 4714,
+                "playing": 3,
+                "toplay": 17,
+                "yet": 290
+              },
+              "platforms": [
+                {
+                  "platform": {
+                    "id": 4,
+                    "name": "PC",
+                    "slug": "pc"
+                  },
+                  "released_at": "2017-03-20",
+                  "requirements_en": {
+                    "minimum": "<strong>Minimum:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows 7 64bit<br></li><li><strong>Processor:</strong> Intel Core i5 - 4590 equivalent<br></li><li><strong>Memory:</strong> 4 GB RAM<br></li><li><strong>Graphics:</strong> DirectX 11 class GPU with 1GB VRAM (nVidia GeForce 480 GTX, AMD Radeon HD 5870)<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> This minimum configuration will not be able to run the VR version. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>",
+                    "recommended": "<strong>Recommended:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows 10 64bit<br></li><li><strong>Processor:</strong> Intel Core i7-6800 equivalent<br></li><li><strong>Memory:</strong> 8 GB RAM<br></li><li><strong>Graphics:</strong> AMD Fury or NVIDIA GTX 1070<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> The recommended requirements are for VR version of the game. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>"
+                  }
+                },
+                {
+                  "platform": {
+                    "id": 5,
+                    "name": "macOS",
+                    "slug": "macos"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "GET /api/games": {
+        "description": "serves a paginated array of all games for general use",
+        "queries": ["page", "limit", "sort_by", "order"],
+        "exampleResponse": {
+          "games": [
+            {
+              "id": 10001,
+              "name": "Serious Sam Fusion 2017 (beta)",
+              "description": "Serious Sam Fusion 2017 is a special edition of the original first-person shooter series. This is a central hub for the whole Serious Sam franchise, which includes remastered and VR versions of both First and Second Encounters, and Serious Sam 3: BFE. The series follows Sam Stone’s adventures set in the environment of Egyptian pyramids, jungles and medieval castles. According to the plot, the protagonist fights against science-fictional extraterrestrial forces and their leader Mental, whose only aim is the devastation of humanity. The gameplay consists of eliminating waves of re-spawning invaders all across the game map. Enemies themselves range from basic soldiers to gigantic robots. As far as health and armor are non-regenerative, players controlling Sam have to gather special packs, which are scattered all around, in addition to dodging aliens’ attacks. From the technical side remasters offer lots of graphical issues and fixtures. The 2017 Fusion also allows players to maneuver within the whole series not exiting the game.",
+              "released": "2017-03-20",
+              "background_image": "https://media.rawg.io/media/games/21b/21babfc41e2a6972290833d1b860f13e.jpg",
+              "rating": 3.06,
+              "rating_top": 4,
+              "ratings": [
+                {
+                  "id": 4,
+                  "title": "recommended",
+                  "count": 118,
+                  "percent": 36.31
+                },
+                {
+                  "id": 3,
+                  "title": "meh",
+                  "count": 96,
+                  "percent": 29.54
+                },
+                {
+                  "id": 1,
+                  "title": "skip",
+                  "count": 80,
+                  "percent": 24.62
+                },
+                {
+                  "id": 5,
+                  "title": "exceptional",
+                  "count": 31,
+                  "percent": 9.54
+                }
+              ],
+              "ratings_count": 325,
+              "suggestions_count": 548,
+              "reviews_count": 325,
+              "reviews_text_count": 0,
+              "added": 5218,
+              "added_by_status": {
+                "beaten": 73,
+                "dropped": 121,
+                "owned": 4714,
+                "playing": 3,
+                "toplay": 17,
+                "yet": 290
+              },
+              "platforms": [
+                {
+                  "platform": {
+                    "id": 4,
+                    "name": "PC",
+                    "slug": "pc"
+                  },
+                  "released_at": "2017-03-20",
+                  "requirements_en": {
+                    "minimum": "<strong>Minimum:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows 7 64bit<br></li><li><strong>Processor:</strong> Intel Core i5 - 4590 equivalent<br></li><li><strong>Memory:</strong> 4 GB RAM<br></li><li><strong>Graphics:</strong> DirectX 11 class GPU with 1GB VRAM (nVidia GeForce 480 GTX, AMD Radeon HD 5870)<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> This minimum configuration will not be able to run the VR version. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>",
+                    "recommended": "<strong>Recommended:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows 10 64bit<br></li><li><strong>Processor:</strong> Intel Core i7-6800 equivalent<br></li><li><strong>Memory:</strong> 8 GB RAM<br></li><li><strong>Graphics:</strong> AMD Fury or NVIDIA GTX 1070<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> The recommended requirements are for VR version of the game. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>"
+                  }
+                },
+                {
+                  "platform": {
+                    "id": 5,
+                    "name": "macOS",
+                    "slug": "macos"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "GET /api/publishers": {
+        "description": "serves an array of all publishers",
+        "queries": [],
+        "exampleResponse": {
+          "publishers": [
+            {
+              "id": 10212,
+              "games_count": 467,
+              "name": "Sony Computer Entertainment",
+              "games": [
+                {
+                  "added": 12476,
+                  "name": "Horizon Zero Dawn",
+                  "id": 278,
+                  "slug": "horizon-zero-dawn"
+                },
+                {
+                  "added": 9982,
+                  "name": "Marvel's Spider-Man",
+                  "id": 58134,
+                  "slug": "marvels-spider-man"
+                },
+                {
+                  "added": 9740,
+                  "name": "Detroit: Become Human",
+                  "id": 29177,
+                  "slug": "detroit-become-human"
+                },
+                {
+                  "added": 9130,
+                  "name": "Uncharted 4: A Thief’s End",
+                  "id": 2462,
+                  "slug": "uncharted-4-a-thiefs-end"
+                },
+                {
+                  "added": 8869,
+                  "name": "The Last Of Us Remastered",
+                  "id": 3636,
+                  "slug": "the-last-of-us-remastered"
+                },
+                {
+                  "added": 8479,
+                  "name": "Bloodborne",
+                  "id": 3387,
+                  "slug": "bloodborne"
+                }
+              ],
+              "image_background": "https://media.rawg.io/media/games/951/951572a3dd1e42544bd39a5d5b42d234.jpg",
+              "slug": "sony-computer-entertainment"
+            },
+            {
+              "id": 1029,
+              "games_count": 27,
+              "name": "Nordic Games",
+              "games": [
+                {
+                  "added": 3827,
+                  "name": "Titan Quest",
+                  "id": 123,
+                  "slug": "titan-quest"
+                },
+                {
+                  "added": 3495,
+                  "name": "This is the Police",
+                  "id": 122,
+                  "slug": "this-is-the-police"
+                },
+                {
+                  "added": 2102,
+                  "name": "Red Faction",
+                  "id": 680,
+                  "slug": "red-faction"
+                },
+                {
+                  "added": 2079,
+                  "name": "Zombie Driver HD",
+                  "id": 4148,
+                  "slug": "zombie-driver-hd"
+                },
+                {
+                  "added": 1976,
+                  "name": "Battle Chasers: Nightwar",
+                  "id": 9964,
+                  "slug": "battle-chasers-nightwar"
+                },
+                {
+                  "added": 1932,
+                  "name": "Painkiller Hell & Damnation",
+                  "id": 17650,
+                  "slug": "painkiller-hell-damnation-2"
+                }
+              ],
+              "image_background": "https://media.rawg.io/media/screenshots/994/994624026c40ce39e148cc2239a26c61.jpg",
+              "slug": "nordic-games"
+            }
+          ]
+        }
+      },
+      "GET /api/developers": {
+        "description": "serves an array of all developers",
+        "queries": [],
+        "exampleResponse": {
+          "developers": [
+              {
+                "id": 10,
+                "games_count": 25,
+                "name": "Rockstar Games",
+                "games": [
+                  {
+                    "added": 21011,
+                    "name": "Grand Theft Auto V",
+                    "id": 3498,
+                    "slug": "grand-theft-auto-v"
+                  },
+                  {
+                    "added": 15455,
+                    "name": "Red Dead Redemption 2",
+                    "id": 28,
+                    "slug": "red-dead-redemption-2"
+                  },
+                  {
+                    "added": 7862,
+                    "name": "Max Payne 3",
+                    "id": 4280,
+                    "slug": "max-payne-3"
+                  },
+                  {
+                    "added": 6900,
+                    "name": "Red Dead Redemption",
+                    "id": 4544,
+                    "slug": "red-dead-redemption"
+                  },
+                  {
+                    "added": 1935,
+                    "name": "Manhunt",
+                    "id": 2647,
+                    "slug": "manhunt"
+                  },
+                  {
+                    "added": 1098,
+                    "name": "Grand Theft Auto: San Andreas – The Definitive Edition",
+                    "id": 709004,
+                    "slug": "grand-theft-auto-san-andreas-the-definitive-editio"
+                  }
+                ],
+                "image_background": "https://media.rawg.io/media/screenshots/d74/d748bb016b1c26935cb7c2d0f2a7ba40.jpg",
+                "slug": "rockstar-games"
+              }
+            ]
+        }
+      },
+      "GET /api/games/:gameId": {
+        "description": "serves details of a game by its ID",
+        "queries": [],
+        "exampleResponse": {
+          "gameById": {
+            "added": 5218,
+            "rating": 3.06,
+            "metacritic": null,
+            "description": "Serious Sam Fusion 2017 is a special edition of the original first-person shooter series. This is a central hub for the whole Serious Sam franchise, which includes remastered and VR versions of both First and Second Encounters, and Serious Sam 3: BFE. The series follows Sam Stone’s adventures set in the environment of Egyptian pyramids, jungles and medieval castles. According to the plot, the protagonist fights against science-fictional extraterrestrial forces and their leader Mental, whose only aim is the devastation of humanity. The gameplay consists of eliminating waves of re-spawning invaders all across the game map. Enemies themselves range from basic soldiers to gigantic robots. As far as health and armor are non-regenerative, players controlling Sam have to gather special packs, which are scattered all around, in addition to dodging aliens’ attacks. From the technical side remasters offer lots of graphical issues and fixtures. The 2017 Fusion also allows players to maneuver within the whole series not exiting the game.",
+            "playtime": 1,
+            "short_screenshots": [
+              {
+                "image": "https://media.rawg.io/media/games/21b/21babfc41e2a6972290833d1b860f13e.jpg",
+                "id": -1
+              },
+              {
+                "image": "https://media.rawg.io/media/screenshots/e64/e645120eb777d257bcb535fa456374d9.jpg",
+                "id": 75554
+              },
+              {
+                "image": "https://media.rawg.io/media/screenshots/f95/f95a18d0b8724d94c83af94c534f6a95.jpg",
+                "id": 75555
+              },
+              {
+                "image": "https://media.rawg.io/media/screenshots/6f9/6f958dbdddb5b524d007ad46662be823.jpg",
+                "id": 75556
+              },
+              {
+                "image": "https://media.rawg.io/media/screenshots/36e/36ea95ab6e3ece9c772523bafafd3255.jpg",
+                "id": 75557
+              },
+              {
+                "image": "https://media.rawg.io/media/screenshots/317/317a25841cb733454afe52a981049eef.jpg",
+                "id": 75558
+              },
+              {
+                "image": "https://media.rawg.io/media/screenshots/9b4/9b46c73588a3af48506c5d5869d352fe.jpg",
+                "id": 75559
+              }
+            ],
+            "platforms": [
+              {
+                "requirements_ru": null,
+                "requirements_en": {
+                  "minimum": "<strong>Minimum:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows 7 64bit<br></li><li><strong>Processor:</strong> Intel Core i5 - 4590 equivalent<br></li><li><strong>Memory:</strong> 4 GB RAM<br></li><li><strong>Graphics:</strong> DirectX 11 class GPU with 1GB VRAM (nVidia GeForce 480 GTX, AMD Radeon HD 5870)<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> This minimum configuration will not be able to run the VR version. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>",
+                  "recommended": "<strong>Recommended:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows 10 64bit<br></li><li><strong>Processor:</strong> Intel Core i7-6800 equivalent<br></li><li><strong>Memory:</strong> 8 GB RAM<br></li><li><strong>Graphics:</strong> AMD Fury or NVIDIA GTX 1070<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> The recommended requirements are for VR version of the game. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>"
+                },
+                "released_at": "2017-03-20",
+                "platform": {
+                  "image": null,
+                  "games_count": 532204,
+                  "year_end": null,
+                  "year_start": null,
+                  "name": "PC",
+                  "id": 4,
+                  "image_background": "https://media.rawg.io/media/games/f87/f87457e8347484033cb34cde6101d08d.jpg",
+                  "slug": "pc"
+                }
+              },
+              {
+                "requirements_ru": null,
+                "requirements_en": {
+                  "minimum": "<strong>Minimum:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> OSX version Lion 10.7<br></li><li><strong>Processor:</strong> Intel Core 2 Duo 2.2 GHz<br></li><li><strong>Memory:</strong> 2 GB RAM<br></li><li><strong>Graphics:</strong> nVidia GeForce GT 9600M/320M 512MB VRAM, AMD Radeon HD 4670 512MB VRAM (Intel integrated GPUs are not supported!)<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>",
+                  "recommended": "<strong>Recommended:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> OSX version Lion 10.7<br></li><li><strong>Processor:</strong> Intel Quad Code 3.2 GHz<br></li><li><strong>Memory:</strong> 4 GB RAM<br></li><li><strong>Graphics:</strong> nVidia GeForce 480 GTX 1GB VRAM, AMD Radeon HD 5870 1GB VRAM (Intel integrated GPUs are not supported!)<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Additional Notes:</strong> Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>"
+                },
+                "released_at": "2017-03-20",
+                "platform": {
+                  "image": null,
+                  "games_count": 104249,
+                  "year_end": null,
+                  "year_start": null,
+                  "name": "macOS",
+                  "id": 5,
+                  "image_background": "https://media.rawg.io/media/games/7fa/7fa0b586293c5861ee32490e953a4996.jpg",
+                  "slug": "macos"
+                }
+              },
+              {
+                "requirements_ru": null,
+                "requirements_en": {
+                  "minimum": "<strong>Minimum:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Ubuntu 14.04<br></li><li><strong>Processor:</strong> Dual-core 2.2 GHz<br></li><li><strong>Memory:</strong> 2 GB RAM<br></li><li><strong>Graphics:</strong> nVidia GeForce 8600/9600GT 512MB VRAM, ATI/AMD Radeon HD2600/3600 512MB VRAM<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Sound Card:</strong> OpenAL Compatible Sound Card<br></li><li><strong>Additional Notes:</strong> This minimum configuration will not be able to run the VR version. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>",
+                  "recommended": "<strong>Recommended:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Ubuntu 14.04<br></li><li><strong>Processor:</strong> Intel Core i7-6800 equivalent<br></li><li><strong>Memory:</strong> 4 GB RAM<br></li><li><strong>Graphics:</strong> NVIDIA GTX 1070<br></li><li><strong>Storage:</strong> 10 GB available space<br></li><li><strong>Sound Card:</strong> OpenAL Compatible Sound Card<br></li><li><strong>Additional Notes:</strong> The recommended requirements are for VR version of the game. Internet connection required for product activation for the first time. After that, a persistent connection is not required to play the game.</li></ul>"
+                },
+                "released_at": "2017-03-20",
+                "platform": {
+                  "image": null,
+                  "games_count": 77164,
+                  "year_end": null,
+                  "year_start": null,
+                  "name": "Linux",
+                  "id": 6,
+                  "image_background": "https://media.rawg.io/media/games/b7b/b7b8381707152afc7d91f5d95de70e39.jpg",
+                  "slug": "linux"
+                }
+              }
+            ],
+            "user_game": null,
+            "rating_top": 4,
+            "reviews_text_count": 0,
+            "ratings": [
+              {
+                "count": 118,
+                "id": 4,
+                "title": "recommended",
+                "percent": 36.31
+              },
+              {
+                "count": 96,
+                "id": 3,
+                "title": "meh",
+                "percent": 29.54
+              },
+              {
+                "count": 80,
+                "id": 1,
+                "title": "skip",
+                "percent": 24.62
+              },
+              {
+                "count": 31,
+                "id": 5,
+                "title": "exceptional",
+                "percent": 9.54
+              }
+            ],
+            "genres": [
+              {
+                "games_count": 180821,
+                "name": "Action",
+                "id": 4,
+                "image_background": "https://media.rawg.io/media/games/ee3/ee3e10193aafc3230ba1cae426967d10.jpg",
+                "slug": "action"
+              },
+              {
+                "games_count": 66615,
+                "name": "Indie",
+                "id": 51,
+                "image_background": "https://media.rawg.io/media/games/b4e/b4e4c73d5aa4ec66bbf75375c4847a2b.jpg",
+                "slug": "indie"
+              }
+            ],
+            "saturated_color": "0f0f0f",
+            "id": 10001,
+            "added_by_status": {
+              "owned": 4714,
+              "beaten": 73,
+              "dropped": 121,
+              "yet": 290,
+              "playing": 3,
+              "toplay": 17
+            },
+            "parent_platforms": [
+              {
+                "platform": {
+                  "name": "PC",
+                  "id": 1,
+                  "slug": "pc"
+                }
+              },
+              {
+                "platform": {
+                  "name": "Apple Macintosh",
+                  "id": 5,
+                  "slug": "mac"
+                }
+              },
+              {
+                "platform": {
+                  "name": "Linux",
+                  "id": 6,
+                  "slug": "linux"
+                }
+              }
+            ],
+            "ratings_count": 325,
+            "slug": "serious-sam-fusion-2017-beta",
+            "released": "2017-03-20",
+            "suggestions_count": 548,
+            "stores": [
+              {
+                "id": 10906,
+                "store": {
+                  "games_count": 95290,
+                  "domain": "store.steampowered.com",
+                  "name": "Steam",
+                  "id": 1,
+                  "image_background": "https://media.rawg.io/media/games/736/73619bd336c894d6941d926bfd563946.jpg",
+                  "slug": "steam"
+                }
+              }
+            ],
+            "tags": [
+              {
+                "games_count": 224157,
+                "name": "Singleplayer",
+                "language": "eng",
+                "id": 31,
+                "image_background": "https://media.rawg.io/media/games/34b/34b1f1850a1c06fd971bc6ab3ac0ce0e.jpg",
+                "slug": "singleplayer"
+              },
+              {
+                "games_count": 38204,
+                "name": "Steam Achievements",
+                "language": "eng",
+                "id": 40847,
+                "image_background": "https://media.rawg.io/media/games/4cf/4cfc6b7f1850590a4634b08bfab308ab.jpg",
+                "slug": "steam-achievements"
+              },
+              {
+                "games_count": 38116,
+                "name": "Multiplayer",
+                "language": "eng",
+                "id": 7,
+                "image_background": "https://media.rawg.io/media/games/f46/f466571d536f2e3ea9e815ad17177501.jpg",
+                "slug": "multiplayer"
+              },
+              {
+                "games_count": 18119,
+                "name": "Full controller support",
+                "language": "eng",
+                "id": 40836,
+                "image_background": "https://media.rawg.io/media/games/737/737ea5662211d2e0bbd6f5989189e4f1.jpg",
+                "slug": "full-controller-support"
+              },
+              {
+                "games_count": 18112,
+                "name": "Steam Cloud",
+                "language": "eng",
+                "id": 40849,
+                "image_background": "https://media.rawg.io/media/games/198/1988a337305e008b41d7f536ce9b73f6.jpg",
+                "slug": "steam-cloud"
+              },
+              {
+                "games_count": 11655,
+                "name": "Co-op",
+                "language": "eng",
+                "id": 18,
+                "image_background": "https://media.rawg.io/media/games/f46/f466571d536f2e3ea9e815ad17177501.jpg",
+                "slug": "co-op"
+              },
+              {
+                "games_count": 5018,
+                "name": "cooperative",
+                "language": "eng",
+                "id": 411,
+                "image_background": "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                "slug": "cooperative"
+              },
+              {
+                "games_count": 31803,
+                "name": "First-Person",
+                "language": "eng",
+                "id": 8,
+                "image_background": "https://media.rawg.io/media/games/2ba/2bac0e87cf45e5b508f227d281c9252a.jpg",
+                "slug": "first-person"
+              },
+              {
+                "games_count": 13283,
+                "name": "FPS",
+                "language": "eng",
+                "id": 30,
+                "image_background": "https://media.rawg.io/media/games/7a2/7a2500ee8b2c0e1ff268bb4479463dea.jpg",
+                "slug": "fps"
+              },
+              {
+                "games_count": 5631,
+                "name": "Online Co-Op",
+                "language": "eng",
+                "id": 9,
+                "image_background": "https://media.rawg.io/media/games/736/73619bd336c894d6941d926bfd563946.jpg",
+                "slug": "online-co-op"
+              },
+              {
+                "games_count": 5718,
+                "name": "Gore",
+                "language": "eng",
+                "id": 26,
+                "image_background": "https://media.rawg.io/media/games/cee/cee577e2097a59b77193fe2bce94667d.jpg",
+                "slug": "gore"
+              },
+              {
+                "games_count": 6852,
+                "name": "Steam Leaderboards",
+                "language": "eng",
+                "id": 40850,
+                "image_background": "https://media.rawg.io/media/games/59a/59a3ebcba3d08c51532c6ca877aff256.jpg",
+                "slug": "steam-leaderboards"
+              },
+              {
+                "games_count": 12493,
+                "name": "Comedy",
+                "language": "eng",
+                "id": 123,
+                "image_background": "https://media.rawg.io/media/games/c6b/c6bfece1daf8d06bc0a60632ac78e5bf.jpg",
+                "slug": "comedy"
+              },
+              {
+                "games_count": 6698,
+                "name": "Violent",
+                "language": "eng",
+                "id": 34,
+                "image_background": "https://media.rawg.io/media/games/5a4/5a44112251d70a25291cc33757220fce.jpg",
+                "slug": "violent"
+              },
+              {
+                "games_count": 3805,
+                "name": "Online multiplayer",
+                "language": "eng",
+                "id": 397,
+                "image_background": "https://media.rawg.io/media/games/1bd/1bd2657b81eb0c99338120ad444b24ff.jpg",
+                "slug": "online-multiplayer"
+              },
+              {
+                "games_count": 6705,
+                "name": "Split Screen",
+                "language": "eng",
+                "id": 198,
+                "image_background": "https://media.rawg.io/media/games/9cc/9cc11e2e81403186c7fa9c00c143d6e4.jpg",
+                "slug": "split-screen"
+              },
+              {
+                "games_count": 5433,
+                "name": "Local Co-Op",
+                "language": "eng",
+                "id": 75,
+                "image_background": "https://media.rawg.io/media/screenshots/c97/c97b943741f5fbc936fe054d9d58851d.jpg",
+                "slug": "local-co-op"
+              },
+              {
+                "games_count": 13172,
+                "name": "Local Multiplayer",
+                "language": "eng",
+                "id": 72,
+                "image_background": "https://media.rawg.io/media/games/27b/27b02ffaab6b250cc31bf43baca1fc34.jpg",
+                "slug": "local-multiplayer"
+              },
+              {
+                "games_count": 1501,
+                "name": "Steam Workshop",
+                "language": "eng",
+                "id": 40852,
+                "image_background": "https://media.rawg.io/media/games/fd6/fd6a1eecd3ec0f875f1924f3656b7dd9.jpg",
+                "slug": "steam-workshop"
+              },
+              {
+                "games_count": 2617,
+                "name": "Cross-Platform Multiplayer",
+                "language": "eng",
+                "id": 40832,
+                "image_background": "https://media.rawg.io/media/games/9bf/9bfac18ff678f41a4674250fa0e04a52.jpg",
+                "slug": "cross-platform-multiplayer"
+              },
+              {
+                "games_count": 1883,
+                "name": "Includes level editor",
+                "language": "eng",
+                "id": 40838,
+                "image_background": "https://media.rawg.io/media/games/7f0/7f021d4a3577ac9d591a628a431fc2e5.jpg",
+                "slug": "includes-level-editor"
+              },
+              {
+                "games_count": 12387,
+                "name": "VR",
+                "language": "eng",
+                "id": 33,
+                "image_background": "https://media.rawg.io/media/games/855/8552c056d729f34c951c30f3cfef9da8.jpg",
+                "slug": "vr"
+              }
+            ],
+            "background_image": "https://media.rawg.io/media/games/21b/21babfc41e2a6972290833d1b860f13e.jpg",
+            "tba": false,
+            "dominant_color": "0f0f0f",
+            "esrb_rating": null,
+            "name": "Serious Sam Fusion 2017 (beta)",
+            "updated": "2024-05-26T12:57:39",
+            "clip": null,
+            "reviews_count": 325,
+            "genreSlugs": [
+              "action",
+              "indie"
+            ]
+          }
+        }
+      },
+      "GET /api/games/genres/:genreSlug": {
+        "description": "serves an array of games by genre",
+        "queries": [],
+        "exampleResponse": {
+          "games": [
+            {
+              "id": 1,
+              "name": "Game One",
+              "genre": "Action",
+              "publisher": "Publisher One",
+              "developer": "Developer One",
+              "release_date": "2020-01-01",
+              "rating": 4.5
+            }
+          ]
+        }
+      },
+      "GET /api/users": {
+        "description": "serves an array of all users",
+        "queries": [],
+        "exampleResponse": {
+          "users": [
+            {
+              "id": 1,
+              "username": "user1",
+              "avatar": "https://example.com/avatar1.png"
+            }
+          ]
+        }
+      },
+      "GET /api/users/:userId": {
+        "description": "serves details of a user by their user ID",
+        "queries": [],
+        "exampleResponse": {
+          "user": {
+            "id": 1,
+            "username": "user1",
+            "avatar": "https://example.com/avatar1.png",
+            "preferences": ["Action", "RPG"],
+            "wishlist": ["Game One", "Game Two"]
+          }
+        }
+      },
+      "POST /api/users/:userId/wishlist/add": {
+        "description": "adds a game to a user's wishlist",
+        "queries": [],
+        "exampleResponse": {
+          "message": "Game added to wishlist successfully."
+        }
+      },
+      "DELETE /api/users/:userId/wishlist/delete/:toDel": {
+        "description": "removes a game from a user's wishlist",
+        "queries": [],
+        "exampleResponse": {
+          "message": "Game removed from wishlist successfully."
+        }
+      },
+      "POST /api/users/:userId/preferences/add": {
+        "description": "adds a preference to a user's profile",
+        "queries": [],
+        "exampleResponse": {
+          "message": "Preference added successfully."
+        }
+      },
+      "DELETE /api/users/:userId/preferences/delete/:toDel": {
+        "description": "removes a preference from a user's profile",
+        "queries": [],
+        "exampleResponse": {
+          "message": "Preference removed successfully."
+        }
+      },
+      "PATCH /api/users/:userId/patch_avatar": {
+        "description": "updates a user's avatar",
+        "queries": [],
+        "exampleResponse": {
+          "message": "Avatar updated successfully.",
+          "avatar": "https://example.com/new_avatar.png"
+        }
+      }
+    }
+  }
+}

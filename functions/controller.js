@@ -1,5 +1,5 @@
 
-const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreference, patchAvatar} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, patchAvatar, fetchAllEndpoints} = require ('./model.js');
 
 const req = require("express/lib/request");
 
@@ -55,8 +55,8 @@ exports.getAllPublishers = (req, res, next) => {
 
 exports.getAllDevelopers = (req, res, next) => {
     retrieveAllDevelopers()
-        .then((publishers) => {
-            res.status(200).send({publishers});
+        .then((developers) => {
+            res.status(200).send({developers});
         })
         .catch((err) => {
             console.log(err);
@@ -198,11 +198,22 @@ exports.changeAvatar = (req, res, next) => {
     const {userId} = req.params;
     const newAvatar = req.body;
 
-    console.log(newAvatar)
 
     patchAvatar(userId, newAvatar.avatarURL)
         .then((postedAvatar) => {
             res.status(201).send({postedAvatar});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+}
+
+exports.getAllEndpoints = (req, res, next) => {
+
+    fetchAllEndpoints()
+        .then((allEndpoints) => {
+            res.status(200).send(allEndpoints);
         })
         .catch((err) => {
             console.log(err);
