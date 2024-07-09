@@ -21,7 +21,8 @@
     "jest": "^29.7.0",
     "node-cache": "^5.1.2",
     "package.json": "^0.0.0",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "jest-sorted": "^1.0.15"

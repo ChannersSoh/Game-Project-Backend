@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById} = require('./controller.js');
+const {getGames, getAllGenres, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference} = require('./controller.js');
 
 /*
 Charnjeet
@@ -30,7 +30,7 @@ Pagenation
 
 const app = express();
 
-app.use(cors());
+app.use(express.json());
 
 app.get('/api/platforms', selectPlatforms); //remove later
 app.get('/api/genres', getAllGenres);
@@ -38,6 +38,14 @@ app.get('/api/games', getGames);
 app.get('/api/publishers', getAllPublishers);
 app.get('/api/developers', getAllDevelopers);
 app.get('/api/games/:gameId', getGameById);
+
+app.get('/api/users', getAllUsers);
+app.get('/api/users/:userId', getUserByUid);
+app.post('/api/users/:userId/wishlist/add', postToWishlist);
+app.delete('/api/users/:userId/wishlist/delete/:toDel', deleteFromWishlist);
+
+app.post('/api/users/:userId/preferences/add', postPreference);
+app.delete('/api/users/:userId/preferences/delete/:toDel', deletePreference);
 
 app.get('/api/games-test', getGameTest);
 
@@ -58,6 +66,6 @@ app.use((err, req, res, next) => {
 });
 
 
-// module.exports = { app };
+module.exports = { app };
 
-exports.app = functions.https.onRequest(app);
+// exports.app = functions.https.onRequest(app);

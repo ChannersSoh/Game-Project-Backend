@@ -1,4 +1,4 @@
-const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreference} = require ('./model.js');
 const req = require("express/lib/request");
 
 
@@ -76,3 +76,89 @@ exports.getGameById = (req, res, next) => {
             next(err);
         });
 }
+
+exports.getAllUsers = (req, res, next) => {
+
+    retrieveAllUsers()
+        .then((allUsers) => {
+            res.status(200).send({allUsers});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        })
+}
+
+exports.getUserByUid = (req, res, next) => {
+    const {userId} = req.params;
+
+
+    retrieveUserByUid(userId)
+        .then((userById) => {
+            res.status(200).send({userById});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+}
+
+exports.postToWishlist = (req, res, next) => {
+    const {userId} = req.params;
+    const newWish = req.body;
+
+
+
+    addToWishlist(userId, newWish)
+        .then((postedWish) => {
+            res.status(201).send({postedWish});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+
+}
+
+exports.deleteFromWishlist = (req, res, next) => {
+    const {userId, toDel} = req.params;
+    removeFromWishlist(userId, toDel)
+        .then((deletedWish) => {
+            res.status(204).send({deletedWish});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+
+}
+
+exports.postPreference = (req, res, next) => {
+    const {userId} = req.params;
+    const newPref = req.body;
+
+
+    addToWishlist(userId, newPref)
+        .then((postedPref) => {
+            res.status(201).send({postedPref});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+
+}
+
+exports.deletePreference = (req, res, next) => {
+    const {userId, toDel} = req.params;
+    removePreference(userId, toDel)
+        .then((deletedWish) => {
+            res.status(204).send({deletedWish});
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+
+}
+
