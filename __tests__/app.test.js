@@ -227,7 +227,7 @@ describe('POST & DELETE /api/users/:userId/wishlist', () => {
     });
     test('Responds with a status 204 with an empty array where the ', () => {
         return request(app)
-            .delete('/api/users/test/wishlist/delete/RPG') //
+            .delete('/api/users/test/wishlist/delete/RPG') 
             .expect(204)
             .then(({ body }) => {
                 expect(body).toEqual({});

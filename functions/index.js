@@ -32,7 +32,7 @@ app.delete('/api/users/:userId/preferences/delete/:toDel', deletePreference);
 app.post('/api/users/:userId/library/add', postToLibrary);
 app.delete('/api/users/:userId/library/delete/:toDel', deleteFromLibrary);
 app.patch('/api/users/:userId/patch_avatar', changeAvatar);
-app.post('/api/execute-python', postPython);
+// app.post('/api/execute-python', postPython);
 
 app.use((req, res, next) => {
     res.status(404).send({ msg: 'Not Found' });

@@ -252,18 +252,18 @@ exports.getAllEndpoints = (req, res, next) => {
         });
 }
 
-exports.postPython = (req, res, next) => {
-    const { scriptPath, args } = req.body;
+// exports.postPython = (req, res, next) => {
+//     const { scriptPath, args } = req.body;
 
-    executePython(scriptPath, args)
-        .then((gamesRec) => {
-            res.status(200).send(gamesRec);
-        })
-        .catch((err) => {
-            console.log(err);
-            next(err);
-        });
-}
+//     executePython(scriptPath, args)
+//         .then((gamesRec) => {
+//             res.status(200).send(gamesRec);
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//             next(err);
+//         });
+// }
 
 
 
