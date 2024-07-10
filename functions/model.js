@@ -104,29 +104,6 @@ exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery, g
     }
 };
 
-exports.selectPlatforms = async (req, res, next) => {
-    try {
-        const platformsCollection = db.collection('platforms');
-        const snapshot = await platformsCollection.get();
-
-        if (snapshot.empty) {
-            res.status(200).send('No platforms found');
-            return;
-        }
-
-        const platforms = [];
-        snapshot.forEach(doc => {
-            platforms.push({ id: doc.id, ...doc.data() });
-        });
-
-        res.status(200).send(platforms);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-};
-
-
-
 exports.retrieveAllGenres = async (req, res, next) => {
     try {
         const genreCollection = db.collection('genres');
@@ -191,27 +168,6 @@ exports.retrieveAllDevelopers = async (req, res, next) => {
     }
 };
 
-exports.retrieveGameTest = async (req, res, next) => {
-    try {
-        const gameTestCollection = db.collection('games-test');
-        const snapshot = await gameTestCollection.get();
-
-        if (snapshot.empty) {
-            res.status(404).send('No games Found');
-            return;
-        }
-
-        const gameTest = [];
-        snapshot.forEach(doc => {
-            gameTest.push({ id: doc.id, ...doc.data() });
-        });
-
-        return gameTest;
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-};
-
 exports.retrieveGameById = async (req, res, next) => {
     try {
         const gameId = db.collection('games').doc(req);
@@ -224,6 +180,77 @@ exports.retrieveGameById = async (req, res, next) => {
 
     } catch (error) {
         res.status(400).send(error.message);
+    }
+};
+
+exports.getReviewsByGameId = async (gameId) => {
+    try {
+        const gameIdStr = String(gameId); 
+
+        console.log('Fetching reviews for gameId:', gameIdStr);
+
+        const reviewsSnapshot = await db.collection('games').doc(gameIdStr).collection('reviews').get();
+        const reviews = [];
+
+        reviewsSnapshot.forEach(doc => {
+            reviews.push({ id: doc.id, ...doc.data() });
+        });
+
+        console.log('Retrieved reviews:', reviews); 
+
+        return reviews;
+    } catch (error) {
+        console.error('Error fetching reviews:', error);
+        throw new Error(`Firestore query failed: ${error.message}`);
+    }
+};
+
+exports.addReview = async (gameId, newReview) => {
+    try {
+        const reviewRef = db.collection('games').doc(gameId).collection('reviews').doc();
+        newReview.reviewId = reviewRef.id; 
+        newReview.timestamp = new Date().toISOString();
+
+        await reviewRef.set(newReview);
+
+      
+        return {
+            ...newReview,
+            id: newReview.reviewId 
+        };
+    } catch (error) {
+        console.error('Error adding review:', error);
+        throw new Error(`Firestore query failed: ${error.message}`);
+    }
+};
+
+exports.updateReview = async (gameId, reviewId, reviewUpdate) => {
+    try {
+        const reviewRef = db.collection('games').doc(gameId).collection('reviews').doc(reviewId);
+
+        await reviewRef.update(reviewUpdate);
+        const updatedReviewDoc = await reviewRef.get();
+
+        if (!updatedReviewDoc.exists) {
+            throw new Error('Review does not exist');
+        } else {
+            return updatedReviewDoc.data();
+        }
+    } catch (error) {
+        console.error('Error updating review:', error);
+        throw new Error(`Firestore query failed: ${error.message}`);
+    }
+};
+
+exports.removeReview = async (gameId, reviewId) => {
+    try {
+        const reviewRef = db.collection('games').doc(gameId).collection('reviews').doc(reviewId);
+
+        await reviewRef.delete();
+        return { reviewId };
+    } catch (error) {
+        console.error('Error deleting review:', error);
+        throw new Error(`Firestore query failed: ${error.message}`);
     }
 };
 

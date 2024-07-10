@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getGames, getAllGenres, getAllGames, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference, changeAvatar, getAllEndpoints, postToLibrary, deleteFromLibrary, postPython} = require('./controller.js');
+const {getGames, getAllGenres, getAllGames, getAllPublishers, getAllDevelopers, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference, changeAvatar, getAllEndpoints, postToLibrary, deleteFromLibrary, getReviews, postReview, patchReview, deleteReview, postPython} = require('./controller.js');
 
 
 
@@ -22,6 +22,10 @@ app.get('/api/publishers', getAllPublishers);
 app.get('/api/developers', getAllDevelopers);
 app.get('/api/games/:gameId', getGameById);
 app.get('/api/games/genres/:genreSlug', getGamesByGenre)
+app.get('/api/games/:gamesId/reviews', getReviews)
+app.post('/api/games/:gameId/reviews', postReview);
+app.patch('/api/games/:gameId/reviews/:reviewId', patchReview);
+app.delete('/api/games/:gameId/reviews/:reviewId', deleteReview);
 
 app.get('/api/users', getAllUsers);
 app.get('/api/users/:userId', getUserByUid);

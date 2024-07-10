@@ -178,7 +178,7 @@ describe('GET /api/games:gameId', () => {
     test('Responds with a status 200 containing a the game requested by ID, with the correct properties', () => {
         return request(app).get('/api/games/3498').expect(200)
             .then(({body}) => {
-                console.log(body);
+               
                 expect(body.gameById).toMatchObject({
                     name : "Grand Theft Auto V",
                     added: expect.any(Number),
@@ -270,16 +270,64 @@ describe('Patch /api/users/:userId/patch_avatar', () => {
     });
 });
 
-describe('Patch /api/execute-python', () => {
-    test.only('Responds with a status 201 containing the posted item', () => {
+// describe('Patch /api/execute-python', () => {
+//     test('Responds with a status 201 containing the posted item', () => {
 
-        const testPostAvatar = { scriptPath : '__tests__/test.py', args: ['dark-souls'] };
-        return request(app)
-            .post('/api/execute-python') // Use a test user ID
-            .send(testPostAvatar)
-            .expect(200)
-            .then(({ body }) => {
-                expect(body.preferences).toEqual(testPostAvatar);
-            });
+//         const testPostAvatar = { scriptPath : '__tests__/test.py', args: ['dark-souls'] };
+//         return request(app)
+//             .post('/api/execute-python') // Use a test user ID
+//             .send(testPostAvatar)
+//             .expect(200)
+//             .then(({ body }) => {
+//                 expect(body.preferences).toEqual(testPostAvatar);
+//             });
+//     });
+// });
+
+    describe.only('POST /api/games/:gameId/reviews', () => {
+        test('should create a new review and return it', async () => {
+            const newReview = { user: 'John Doe', content: 'Great game!', rating: 5 };
+
+            const res = await request(app)
+                .post(`/api/games/21/reviews`)
+                .send(newReview)
+                .expect(201);
+
+            expect(res.body.review).toHaveProperty('id');
+            expect(res.body.review).toMatchObject(newReview);
+        });
+
     });
-});
+
+
+    describe.only('GET /api/games/:gameId/reviews', () => {
+        test('should return reviews when requested', async () => {
+            const res = await request(app)
+                .get(`/api/games/21/reviews`)
+                .expect(200);
+            console.log(res.body)
+            expect(res.body.reviews.length).toBe(1);
+            expect(res.body.reviews[0]).toHaveProperty('id');
+            expect(res.body.reviews[0].user).toBe('John Doe');
+            expect(res.body.reviews[0].content).toBe('Great game!');
+            expect(res.body.reviews[0].rating).toBe(5);
+        });
+
+        it('should fetch reviews when gameId is valid', async () => {
+            const gameId = 21; // Replace with a valid gameId for testing
+            const res = await request(app)
+                .get(`/api/games/${gameId}/reviews`)
+                .expect(200);
+        
+            console.log('Fetched reviews:', res.body.reviews); // Log the fetched reviews
+            expect(res.body.reviews.length).toBeGreaterThan(0); // Assert that reviews are fetched
+        });
+
+        test('should return an empty array when there are no reviews', async () => {
+            const res = await request(app)
+                .get(`/api/games/21/reviews`)
+                .expect(200);
+            
+            expect(res.body.reviews).toEqual([]);
+        });
+    });

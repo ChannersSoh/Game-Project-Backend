@@ -1,5 +1,5 @@
 
-const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, addToLibrary, removeFromLibrary,  patchAvatar, fetchAllEndpoints, executePython} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, addToLibrary, removeFromLibrary,  patchAvatar, fetchAllEndpoints, addReview, getReviewsByGameId, deleteReview, updateReview, executePython} = require ('./model.js');
 
 const req = require("express/lib/request");
 
@@ -57,17 +57,6 @@ exports.getAllDevelopers = (req, res, next) => {
     retrieveAllDevelopers()
         .then((developers) => {
             res.status(200).send({developers});
-        })
-        .catch((err) => {
-            console.log(err);
-            next(err);
-        });
-}
-
-exports.getGameTest = (req, res, next) => {
-    retrieveGameTest()
-        .then((gameTest) => {
-            res.status(200).send({gameTest});
         })
         .catch((err) => {
             console.log(err);
@@ -134,7 +123,58 @@ exports.getGamesByGenre = (req, res, next) => {
 
 }
 
-       
+exports.getReviews = (req, res, next) => {
+    const { gameId } = req.params;
+    getReviewsByGameId(gameId)
+        .then(reviews => {
+            res.status(200).send({ reviews });
+        })
+        .catch((err) => {
+            console.log(err)
+            next(err)
+        });
+};
+
+
+exports.postReview = (req, res, next) => {
+    const { gameId } = req.params;
+    const newReview = req.body;
+    addReview(gameId, newReview)
+        .then((postedReview) => {
+            res.status(201).send({ review: postedReview });
+        })
+        .catch ((error) => {
+            console.error('Error adding review:', error);
+            throw { status: 500, msg: `Failed to add review: ${error.message}` }; // Adjust as per your error handling needs
+        })
+};
+
+exports.patchReview = (req, res, next) => {
+    const { gameId, reviewId } = req.params;
+    const reviewUpdate = req.body;
+
+    updateReview(gameId, reviewId, reviewUpdate)
+        .then((updatedReview) => {
+            res.status(200).send({ updatedReview });
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+};
+
+exports.deleteReview = (req, res, next) => {
+    const { gameId, reviewId } = req.params;
+
+    removeReview(gameId, reviewId)
+        .then((deletedReview) => {
+            res.status(204).send({ deletedReview });
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+};
 
 exports.postToWishlist = (req, res, next) => {
     const {userId} = req.params;
