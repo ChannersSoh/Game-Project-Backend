@@ -1,5 +1,7 @@
 const { db } = require("./admin.js");
 const { collection, getDocs } = require('firebase/firestore');
+const {runPythonScript} = require('./run-python.js');
+
 
 const NodeCache = require( "node-cache" );
 const {admin} = require("./admin");
@@ -436,6 +438,18 @@ exports.fetchAllEndpoints = async (req, res, next) => {
         }
         catch (error) {
         res.status(400).send(error.message);
+    }
+};
+
+exports.executePython = async (scriptPath, args, res, next) => {
+    console.log(scriptPath);
+    console.log(args);
+    try {
+        const result = await runPythonScript(scriptPath, args);
+        res.json({ success: true, message: 'Python script executed successfully', result });
+    } catch (error) {
+        console.error('Error executing Python script:', error);
+        res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 };
 

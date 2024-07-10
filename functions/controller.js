@@ -1,5 +1,5 @@
 
-const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, addToLibrary, removeFromLibrary,  patchAvatar, fetchAllEndpoints} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, addToLibrary, removeFromLibrary,  patchAvatar, fetchAllEndpoints, executePython} = require ('./model.js');
 
 const req = require("express/lib/request");
 
@@ -245,6 +245,19 @@ exports.getAllEndpoints = (req, res, next) => {
     fetchAllEndpoints()
         .then((allEndpoints) => {
             res.status(200).send(allEndpoints);
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err);
+        });
+}
+
+exports.postPython = (req, res, next) => {
+    const { scriptPath, args } = req.body;
+
+    executePython(scriptPath, args)
+        .then((gamesRec) => {
+            res.status(200).send(gamesRec);
         })
         .catch((err) => {
             console.log(err);

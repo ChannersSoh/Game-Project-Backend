@@ -236,7 +236,7 @@ describe('POST & DELETE /api/users/:userId/wishlist', () => {
 });
 
 describe('POST & DELETE /api/users/:userId/preferences', () => {
-    test.only('Responds with a status 201 containing the posted item', () => {
+    test('Responds with a status 201 containing the posted item', () => {
         const testPostComment = ['thingy', 'game', 'whatever'];
         return request(app)
             .post('/api/users/test/preferences/add') // Use a test user ID
@@ -262,6 +262,20 @@ describe('Patch /api/users/:userId/patch_avatar', () => {
         const testPostAvatar = { avatarURL :'https://i2-prod.stokesentinel.co.uk/incoming/article9009038.ece/ALTERNATES/s810/0_Screenshot-2024-01-02-140517.jpg'};
         return request(app)
             .patch('/api/users/test/patch_avatar') // Use a test user ID
+            .send(testPostAvatar)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.preferences).toEqual(testPostAvatar);
+            });
+    });
+});
+
+describe('Patch /api/execute-python', () => {
+    test.only('Responds with a status 201 containing the posted item', () => {
+
+        const testPostAvatar = { scriptPath : '__tests__/test.py', args: ['dark-souls'] };
+        return request(app)
+            .post('/api/execute-python') // Use a test user ID
             .send(testPostAvatar)
             .expect(200)
             .then(({ body }) => {

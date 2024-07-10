@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { selectPlatforms } = require('./model.js')
-const {getGames, getAllGenres, getAllGames, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference, changeAvatar, getAllEndpoints, postToLibrary, deleteFromLibrary} = require('./controller.js');
+const {getGames, getAllGenres, getAllGames, getAllPublishers, getAllDevelopers, getGameTest, getGameById, getGamesByGenre, getAllUsers, getUserByUid, postToWishlist, deleteFromWishlist, postPreference, deletePreference, changeAvatar, getAllEndpoints, postToLibrary, deleteFromLibrary, postPython} = require('./controller.js');
 
 
 
@@ -32,6 +32,7 @@ app.delete('/api/users/:userId/preferences/delete/:toDel', deletePreference);
 app.post('/api/users/:userId/library/add', postToLibrary);
 app.delete('/api/users/:userId/library/delete/:toDel', deleteFromLibrary);
 app.patch('/api/users/:userId/patch_avatar', changeAvatar);
+app.post('/api/execute-python', postPython);
 
 app.use((req, res, next) => {
     res.status(404).send({ msg: 'Not Found' });
@@ -53,3 +54,6 @@ app.use((err, req, res, next) => {
 // module.exports = { app };
 
 exports.app = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(app);
+
+
+

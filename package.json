@@ -21,6 +21,8 @@
     "jest": "^29.7.0",
     "node-cache": "^5.1.2",
     "package.json": "^0.0.0",
+    "python": "^0.0.4",
+    "python-shell": "^5.0.0",
     "supertest": "^7.0.0",
     "winston": "^3.13.0"
   },
