@@ -1,6 +1,5 @@
 const { db } = require("./admin.js");
 const { collection, getDocs } = require('firebase/firestore');
-// const {runPythonScript} = require('./run-python.js');
 
 
 const NodeCache = require( "node-cache" );
@@ -104,29 +103,6 @@ exports.retrieveGames = async (page, limit, sortField, sortOrder, searchQuery, g
     }
 };
 
-exports.selectPlatforms = async (req, res, next) => {
-    try {
-        const platformsCollection = db.collection('platforms');
-        const snapshot = await platformsCollection.get();
-
-        if (snapshot.empty) {
-            res.status(200).send('No platforms found');
-            return;
-        }
-
-        const platforms = [];
-        snapshot.forEach(doc => {
-            platforms.push({ id: doc.id, ...doc.data() });
-        });
-
-        res.status(200).send(platforms);
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-};
-
-
-
 exports.retrieveAllGenres = async (req, res, next) => {
     try {
         const genreCollection = db.collection('genres');
@@ -186,27 +162,6 @@ exports.retrieveAllDevelopers = async (req, res, next) => {
         });
 
         return developers;
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
-};
-
-exports.retrieveGameTest = async (req, res, next) => {
-    try {
-        const gameTestCollection = db.collection('games-test');
-        const snapshot = await gameTestCollection.get();
-
-        if (snapshot.empty) {
-            res.status(404).send('No games Found');
-            return;
-        }
-
-        const gameTest = [];
-        snapshot.forEach(doc => {
-            gameTest.push({ id: doc.id, ...doc.data() });
-        });
-
-        return gameTest;
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -361,16 +316,16 @@ exports.removePreferences = async (userId, delPref, res, next) => {
     }
 };
 
-exports.addToLibrary = async (userId, libraryAdd, res, next) => {
+exports.addToLibrary = async (userId, libraryAdd) => {
 
     try {
         const userByUid = db.collection('users').doc(userId);
         const fetchedUser = await userByUid.get();
-        const userLibrary = fetchedUser.data().library;
-        const updatedPrefList = userLibrary.concat(libraryAdd);
+        const userLibrary = fetchedUser.data().library || []; //create an empty library if doesnt exist
+        const updatedLibraryList = userLibrary.concat(libraryAdd); //changed name of const for clarity
 
         await userByUid.update({
-            library: updatedPrefList
+            library: updatedLibraryList
         });
 
         const updatedUserDoc = await userByUid.get();
@@ -382,11 +337,12 @@ exports.addToLibrary = async (userId, libraryAdd, res, next) => {
 
 
     } catch (error) {
-        res.status(400).send(error.message);
+        console.error('Error in addToLibrary:', error.message); // Error log
+        throw error;  //changed error handling so that it is handled in controller
     }
 };
 
-exports.removeFromLibrary = async (userId, libraryDel, res, next) => {
+exports.removeFromLibrary = async (userId, libraryDel) => {
 
     try {
         const userByUid = db.collection('users').doc(userId);
@@ -396,11 +352,11 @@ exports.removeFromLibrary = async (userId, libraryDel, res, next) => {
             throw new Error('User does not exist');
         }
 
-        const userLibrary = fetchedDoc.data().preferences;
+        const userLibrary = fetchedDoc.data().library || []; //made it so that if there is no library make one
         const updatedLibrary = userLibrary.filter((item) => item !== libraryDel);
 
         await userByUid.update({
-            preferences: updatedLibrary
+           library: updatedLibrary //was preferences
         });
         const updatedUserDoc = await userByUid.get();
 
@@ -408,7 +364,8 @@ exports.removeFromLibrary = async (userId, libraryDel, res, next) => {
         return updatedUserDoc.data();
 
     } catch (error) {
-        res.status(400).send(error.message);
+        console.error('Error in addToLibrary:', error.message); // Error log
+        throw error; //changed error handling so that it is handled in controller
     }
 };
 
@@ -416,7 +373,7 @@ exports.patchAvatar = async (userId, newAvatar, res, next) => {
     try {
         const userByUid = db.collection('users').doc(userId);
         await userByUid.update({
-            Avatar: newAvatar
+            avatar: newAvatar
         });
 
         const updatedUserDoc = await userByUid.get();
@@ -441,15 +398,4 @@ exports.fetchAllEndpoints = async (req, res, next) => {
     }
 };
 
-// exports.executePython = async (scriptPath, args, res, next) => {
-//     console.log(scriptPath);
-//     console.log(args);
-//     try {
-//         const result = await runPythonScript(scriptPath, args);
-//         res.json({ success: true, message: 'Python script executed successfully', result });
-//     } catch (error) {
-//         console.error('Error executing Python script:', error);
-//         res.status(500).json({ error: 'Internal server error', details: error.message });
-//     }
-// };
 

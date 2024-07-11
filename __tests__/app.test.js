@@ -237,20 +237,41 @@ describe('POST & DELETE /api/users/:userId/wishlist', () => {
 
 describe('POST & DELETE /api/users/:userId/preferences', () => {
     test('Responds with a status 201 containing the posted item', () => {
-        const testPostComment = ['thingy', 'game', 'whatever'];
+        const testPostComment = ['thingy', 'game', 'whatever', 'RPG'];
         return request(app)
             .post('/api/users/test/preferences/add') // Use a test user ID
             .send(testPostComment)
             .expect(201)
             .then(({ body }) => {
-                expect(body.preferences).toEqual([{ type: 'genre', body: 'RPG' }]);
+                expect(body.postedPref.preferences).toEqual([{ type: 'genre', body: 'RPG' }]);
                 console.log(body);
             });
     });
-    test('Responds with a status 201 containing the posted item', () => {
+    test.only('Responds with a status 204', () => {
         return request(app)
-            .delete('/api/users/test/wishlist/delete/RPG') //
+            .delete('/api/users/test/preferences/delete/game') 
             .expect(204)
+            .then(({ body }) => {
+                expect(body).toEqual({});
+            });
+    });
+});
+
+describe('POST & DELETE /api/users/:userId/library', () => {
+    test.only('Responds with a status 201 containing the posted items', () => {
+        const testPostComment = ['2187', '6784'];
+        return request(app)
+            .post('/api/users/FIAj5aqlpdZLS95k6TZE5RcmR482/library/add') 
+            .send(testPostComment)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.postedWish.preferences).toEqual([testPostComment]);
+                
+            });
+    });
+    test.only('Responds with a status 204', () => {
+        return request(app)
+            .delete('/api/users/FIAj5aqlpdZLS95k6TZE5RcmR482/library/delete/2187')
             .then(({ body }) => {
                 expect(body).toEqual({});
             });
@@ -270,16 +291,3 @@ describe('Patch /api/users/:userId/patch_avatar', () => {
     });
 });
 
-describe('Patch /api/execute-python', () => {
-    test.only('Responds with a status 201 containing the posted item', () => {
-
-        const testPostAvatar = { scriptPath : '__tests__/test.py', args: ['dark-souls'] };
-        return request(app)
-            .post('/api/execute-python') // Use a test user ID
-            .send(testPostAvatar)
-            .expect(200)
-            .then(({ body }) => {
-                expect(body.preferences).toEqual(testPostAvatar);
-            });
-    });
-});

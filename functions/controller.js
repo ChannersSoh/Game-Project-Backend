@@ -1,5 +1,5 @@
 
-const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameTest, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, addToLibrary, removeFromLibrary,  patchAvatar, fetchAllEndpoints, executePython} = require ('./model.js');
+const {retrieveGames, retrieveAllGenres, retrieveAllGames, retrieveAllPublishers, retrieveAllDevelopers, retrieveGameById, retrieveAllUsers, retrieveUserByUid, addToWishlist, removeFromWishlist, addToPreferences, removePreferences, addToLibrary, removeFromLibrary,  patchAvatar, fetchAllEndpoints} = require ('./model.js');
 
 const req = require("express/lib/request");
 
@@ -57,17 +57,6 @@ exports.getAllDevelopers = (req, res, next) => {
     retrieveAllDevelopers()
         .then((developers) => {
             res.status(200).send({developers});
-        })
-        .catch((err) => {
-            console.log(err);
-            next(err);
-        });
-}
-
-exports.getGameTest = (req, res, next) => {
-    retrieveGameTest()
-        .then((gameTest) => {
-            res.status(200).send({gameTest});
         })
         .catch((err) => {
             console.log(err);
@@ -251,19 +240,6 @@ exports.getAllEndpoints = (req, res, next) => {
             next(err);
         });
 }
-
-// exports.postPython = (req, res, next) => {
-//     const { scriptPath, args } = req.body;
-
-//     executePython(scriptPath, args)
-//         .then((gamesRec) => {
-//             res.status(200).send(gamesRec);
-//         })
-//         .catch((err) => {
-//             console.log(err);
-//             next(err);
-//         });
-// }
 
 
 
