@@ -215,7 +215,7 @@ describe('GET /api/games:gameId', () => {
 
 describe('POST & DELETE /api/users/:userId/wishlist', () => {
     test('Responds with a status 201 containing the posted item', () => {
-        const testPostComment = { type: 'genre', body: 'RPG' };
+        const testPostComment = ['thingy', 'game', 'whatever', 'RPG']
         return request(app)
             .post('/api/users/test/wishlist/add') // Use a test user ID
             .send(testPostComment)
@@ -225,7 +225,7 @@ describe('POST & DELETE /api/users/:userId/wishlist', () => {
                 console.log(body);
             });
     });
-    test('Responds with a status 204 with an empty array where the ', () => {
+    test.only('Responds with a status 204 with an empty array where the ', () => {
         return request(app)
             .delete('/api/users/test/wishlist/delete/RPG') 
             .expect(204)
@@ -247,7 +247,7 @@ describe('POST & DELETE /api/users/:userId/preferences', () => {
                 console.log(body);
             });
     });
-    test.only('Responds with a status 204', () => {
+    test('Responds with a status 204', () => {
         return request(app)
             .delete('/api/users/test/preferences/delete/game') 
             .expect(204)
@@ -258,7 +258,7 @@ describe('POST & DELETE /api/users/:userId/preferences', () => {
 });
 
 describe('POST & DELETE /api/users/:userId/library', () => {
-    test.only('Responds with a status 201 containing the posted items', () => {
+    test('Responds with a status 201 containing the posted items', () => {
         const testPostComment = ['2187', '6784'];
         return request(app)
             .post('/api/users/FIAj5aqlpdZLS95k6TZE5RcmR482/library/add') 
@@ -269,7 +269,7 @@ describe('POST & DELETE /api/users/:userId/library', () => {
                 
             });
     });
-    test.only('Responds with a status 204', () => {
+    test('Responds with a status 204', () => {
         return request(app)
             .delete('/api/users/FIAj5aqlpdZLS95k6TZE5RcmR482/library/delete/2187')
             .then(({ body }) => {

@@ -222,8 +222,11 @@ exports.retrieveUserByUid = async (req, res, next) => {
 exports.addToWishlist = async (userId, newWish, res, next) => {
     try {
         const userByUid = db.collection('users').doc(userId);
+        const fetchedUser = await userByUid.get();
+        const userWishlist = fetchedUser.data().wishlist || [];
+        const updatedWishlist = userWishlist.concat(newWish); 
         await userByUid.update({
-            wishlist: admin.firestore.FieldValue.arrayUnion(newWish)
+            wishlist: updatedWishlist
         });
 
         const updatedUserDoc = await userByUid.get();
@@ -235,11 +238,12 @@ exports.addToWishlist = async (userId, newWish, res, next) => {
 
 
     } catch (error) {
-        res.status(400).send(error.message);
+        console.error('Error in addToLibrary:', error.message); // Error log
+        throw error;  //changed error handling so that it is handled in controller
     }
 };
 
-exports.removeFromWishlist = async (userId, delWish, res, next) => {
+exports.removeFromWishlist = async (userId, delWish) => {
 
     try {
         const userByUid = db.collection('users').doc(userId);
@@ -249,8 +253,8 @@ exports.removeFromWishlist = async (userId, delWish, res, next) => {
             throw new Error('User does not exist');
         }
 
-        const userWishlist = fetchedDoc.data().wishlist;
-        const updatedWishlist = userWishlist.filter((wish) => wish.body !== delWish);
+        const userWishlist = fetchedDoc.data().wishlist || [];
+        const updatedWishlist = userWishlist.filter((wish) => wish !== delWish);
 
         await userByUid.update({
             wishlist: updatedWishlist
@@ -261,7 +265,8 @@ exports.removeFromWishlist = async (userId, delWish, res, next) => {
         return updatedUserDoc.data();
 
     } catch (error) {
-        res.status(400).send(error.message);
+        console.error('Error in addToLibrary:', error.message); // Error log
+        throw error; //changed error handling so that it is handled in controller
     }
 };
 
