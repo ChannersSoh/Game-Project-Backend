@@ -11,13 +11,13 @@ This repository contains the code for the api which Gamerly fetches it's informa
 
 If you want to run the repository locally follow these steps..
 
-    Clone the repository
+Clone the repository
 
-git clone https://github.com/ChannersSoh/game-project-be
+    git clone https://github.com/ChannersSoh/game-project-be
 
-    Install dependencies
+Install dependencies
 
-npm install
+    npm install
 
 To be able to create the api, a firestore key is requires. This is acquired by creating a firebase project, going into firestore, opening options then creating a service key. Then, transfer the key into the firestore-key folder and change the file path in the export and admin files. Run the file exportDataToFirebase to populate database. Using the command npm test app.test.js will run all the tests related to the api.
 
