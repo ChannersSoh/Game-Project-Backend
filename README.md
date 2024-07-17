@@ -19,7 +19,7 @@ Install dependencies
 
     npm install
 
-To be able to create the api, a firestore key is requires. This is acquired by creating a firebase project, going into firestore, opening options then creating a service key. Then, transfer the key into the firestore-key folder and change the file path in the export and admin files. Run the file exportDataToFirebase to populate database. Using the command npm test app.test.js will run all the tests related to the api.
+To be able to create the api, a firestore key is required. This is acquired by creating a firebase project, going into firestore, opening options then creating a service key. Then, transfer the key into the firestore-key folder and change the file path in the export and admin files. Run the file exportDataToFirebase to populate database. Using the command npm test app.test.js will run all the tests related to the api.
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by Northcoders
 
